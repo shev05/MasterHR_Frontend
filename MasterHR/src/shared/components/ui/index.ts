@@ -13,3 +13,4 @@ export * from './base-date-range-picker';
 export * from './base-date-time-picker';
 export * from './base-date-time-range-picker';
 export * from './base-switch';
+export * from './spinner'
