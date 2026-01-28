@@ -1,22 +1,40 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { useDispatch, useSelector } from 'react-redux';
-import { persistStore } from 'redux-persist';
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-import { userReducer } from './user';
+import type { GetUser } from '@/api/endpoints';
 
-const rootReducer = combineReducers({
-  currUser: userReducer,
-});
+interface UserState {
+  user: GetUser | null;
+  isAuth: boolean;
+  setUser: (user: GetUser) => void;
+  deleteUser: () => void;
+}
 
-export const store = configureStore({
-  reducer: rootReducer,
-  devTools: import.meta.env.NODE_ENV !== 'production',
-});
+export const useUserStore = create<UserState>()(
+  persist(
+    (set) => ({
+      user: null,
+      isAuth: false,
+      setUser: (user) =>
+        set({
+          user,
+          isAuth: true,
+        }),
+      deleteUser: () =>
+        set({
+          user: null,
+          isAuth: false,
+        }),
+    }),
+    {
+      name: 'user-storage',
+    }
+  )
+);
+export const useCurrUser = () => useUserStore((state) => state.user);
+export const useIsAuth = () => useUserStore((state) => state.isAuth);
 
-export const persistor = persistStore(store);
-
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
-
-export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
-export const useAppSelector = useSelector.withTypes<RootState>();
+export const useUserActions = () => {
+  const { setUser, deleteUser } = useUserStore();
+  return { setUser, deleteUser };
+};

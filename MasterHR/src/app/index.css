@@ -54,6 +54,26 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  --toast-default-background: oklch(1 0 0);
+  --toast-default-border: oklch(0.9466 0 0);
+  --toast-default-foreground: oklch(0.2044 0 0);
+
+  --toast-success-background: oklch(0.9797 0.023 158.94);
+  --toast-success-border: oklch(0.9413 0.0781 158.88);
+  --toast-success-foreground: oklch(0.5507 0.1654 146.61);
+
+  --toast-info-background: oklch(0.9746 0.0129 244.25);
+  --toast-info-border: oklch(0.9275 0.0322 265.82);
+  --toast-info-foreground: oklch(0.5626 0.1821 255.12);
+
+  --toast-warning-background: oklch(0.9904 0.0167 96.37);
+  --toast-warning-border: oklch(0.9448 0.0787 96.97);
+  --toast-warning-foreground: oklch(0.6692 0.1602 56.73);
+
+  --toast-error-background: oklch(0.9664 0.016568 16.2786);
+  --toast-error-border: oklch(0.9332 0.0338 16.63);
+  --toast-error-foreground: oklch(0.5799 0.23795071251370786 29.233880279627936);
 }
 
 body {
@@ -153,7 +173,7 @@ body {
   }
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px)
+  --radius-4xl: calc(var(--radius) + 16px);
 }
 
 @layer base {
