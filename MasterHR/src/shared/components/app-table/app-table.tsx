@@ -62,7 +62,6 @@ export const AppTable = <T,>({
   onSortingParamsChange,
   onSelectionChange,
 
-  // selection = {},
   singleSelection = false,
 
   selectionMode = false,
@@ -79,15 +78,12 @@ export const AppTable = <T,>({
         pageIndex: (meta?.page ?? DEFAULT_QUERIES.page) - 1,
         pageSize: meta?.per_page ?? DEFAULT_QUERIES.per_page,
       },
-      // sorting: [{ id: '', desc: true }],
-      // rowSelection: selection,
     },
 
     getRowId,
 
     getCoreRowModel: getCoreRowModel(),
 
-    //for server side sorting and pagination
     manualPagination: true,
     manualSorting: true,
     enableRowSelection: true,
