@@ -19,3 +19,9 @@ export type InferRouteKeys<T extends RouteHierarchyNode<unknown>, Parent extends
     ? `${Parent}${K}` | InferRouteKeys<Children, `${Parent}${K}_`>
     : `${Parent}${K}`;
 }[keyof T & string];
+
+export type BaseGetColumnsProps<T = undefined> = Partial<{
+  onView: (row: T) => void;
+  onEdit: (row: T) => void;
+  onDelete: (row: T) => void;
+}>;

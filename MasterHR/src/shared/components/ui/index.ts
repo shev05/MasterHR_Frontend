@@ -17,3 +17,4 @@ export * from './spinner';
 export * from './card';
 export * from './table';
 export * from './suspense-wrapper';
+export * from './tooltip';
