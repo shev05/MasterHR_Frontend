@@ -16,7 +16,7 @@ export const PasswordInput: FC<PasswordInputProps> = ({
   label,
   description,
   errors,
-  placeholder = 'Введите значение',
+  placeholder = 'Введите пароль',
   invalid = false,
   required = false,
   ...props
