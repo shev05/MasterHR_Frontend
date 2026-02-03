@@ -4,3 +4,5 @@ export * from './centered-spinner';
 export * from './controls';
 export * from './ui';
 export * from './app-table';
+export * from './nav-menu';
+export * from './app-sidebar';
