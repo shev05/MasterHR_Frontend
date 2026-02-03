@@ -69,6 +69,7 @@ export const asTransformedRoutes = <T extends RouteHierarchyType>(hierarchy: T):
         generatePath: () => absPath,
         getChildrenPermissions: () => [],
       };
+
       return acc;
     }, {});
   };

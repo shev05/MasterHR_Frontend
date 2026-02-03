@@ -27,7 +27,7 @@ export const useUserStore = create<UserState>()(
         }),
     }),
     {
-      name: 'user-storage',
+      name: 'master-hr-user-storage',
     }
   )
 );
