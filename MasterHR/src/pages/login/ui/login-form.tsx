@@ -1,7 +1,7 @@
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Button, FormInput, FormPasswordInput } from '@/shared/components';
+import { Button, FormInput, FormPasswordInput, toast } from '@/shared/components';
 
 import { LOGIN_DEFAULT_VALUES, LOGIN_FIELDS, LOGIN_FORM_SCHEMA } from './login-form.lib';
 
@@ -16,8 +16,8 @@ export const LoginForm: FC = () => {
   const { handleSubmit } = form;
 
   const handleFormSubmit = handleSubmit((formValues) => {
-    // eslint-disable-next-line no-console
-    console.log(formValues);
+    const x = formValues[LOGIN_FIELDS.LOGIN];
+    toast.success(x.toString());
   });
 
   return (

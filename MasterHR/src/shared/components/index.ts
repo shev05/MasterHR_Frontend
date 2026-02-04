@@ -6,3 +6,4 @@ export * from './ui';
 export * from './app-table';
 export * from './nav-menu';
 export * from './app-sidebar';
+export * from './app-toaster'
