@@ -12,7 +12,15 @@ export type InputProps = BaseInputProps & {
   invalid?: boolean;
 };
 
-export const Input: FC<InputProps> = ({ label, required = false, errors, invalid = false, description, ...props }) => {
+export const Input: FC<InputProps> = ({
+  label,
+  required = false,
+  errors,
+  invalid = false,
+  description,
+  placeholder = 'Введите что-нибудь',
+  ...props
+}) => {
   const inputId = useId();
 
   return (
@@ -23,7 +31,7 @@ export const Input: FC<InputProps> = ({ label, required = false, errors, invalid
           {required && <span className='text-destructive'>*</span>}
         </FieldLabel>
       )}
-      <BaseInput id={inputId} aria-invalid={invalid} {...props} />
+      <BaseInput id={inputId} aria-invalid={invalid} {...props} placeholder={placeholder} />
       {invalid && <FieldError errors={errors} className='px-2' />}
       {description && <FieldDescription className='px-2'>{description}</FieldDescription>}
     </Field>
