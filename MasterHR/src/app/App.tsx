@@ -6,7 +6,7 @@ import './index.css';
 
 import { queryClient } from '@/api/query-client';
 import { DialogProvider, ThemeProvider } from '@/providers';
-import { CenteredSpinner, ErrorBoundary } from '@/shared/components';
+import { CenteredSpinner, ErrorBoundary, Toaster, ToastProvider } from '@/shared/components';
 import { UNAUTHENTICATED_ROUTER, AUTHENTICATED_ROUTER } from '@/shared/constants/routes';
 import { useUserStore } from '@/store';
 
@@ -16,6 +16,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
+        <ToastProvider>
+          <Toaster />
+        </ToastProvider>
         <DialogProvider>
           <ErrorBoundary>
             <Suspense fallback={<CenteredSpinner />}>
