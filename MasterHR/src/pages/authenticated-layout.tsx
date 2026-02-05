@@ -12,7 +12,7 @@ export const AuthenticatedLayout: FC = () => {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main className='flex h-screen w-full flex-col justify-between gap-2 overflow-hidden p-2'>
+      <main className='flex h-screen w-full flex-col justify-between gap-2 overflow-hidden p-1 px-2'>
         <header className='flex w-full flex-col items-center justify-between gap-1'>
           <div className='flex w-full items-center gap-2'>
             <SuspenseWrapper condition={isMobile}>
