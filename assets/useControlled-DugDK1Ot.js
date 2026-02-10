@@ -1,1 +1,0 @@
-import{aj as c,r as t}from"./index-Bvlo4ITz.js";function v(e){return c(e,"base-ui")}function m({controlled:e,default:s,name:i,state:f="value"}){const{current:a}=t.useRef(e!==void 0),[u,n]=t.useState(s),o=a?e:u,r=t.useCallback(l=>{a||n(l)},[]);return[o,r]}export{m as a,v as u};
