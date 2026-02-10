@@ -23,6 +23,7 @@ export default defineConfig(({ mode }) => {
     : undefined;
 
   return {
+    base: '/MasterHR_Frontend/',
     plugins: [react(), tailwindcss(), analyzer({ enabled: isAnalyser })],
     resolve: {
       alias: {
