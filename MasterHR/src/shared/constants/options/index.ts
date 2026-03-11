@@ -1,1 +1,1 @@
-export * from './table-per-page'
+export * from './table-per-page';

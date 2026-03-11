@@ -1,10 +1,12 @@
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { useState } from 'react';
 
-import { BaseInput, Button } from '@/shared/components/ui';
 import { cn } from '@/shared/lib/cn';
 
-import type { BaseInputProps } from '@/shared/components/ui';
+import { Button } from './button';
+import {BaseInput} from './base-input'
+
+import type { BaseInputProps } from '@/shared/components/ui/base-input';
 import type { FC } from 'react';
 
 export type BasePasswordInputProps = BaseInputProps;

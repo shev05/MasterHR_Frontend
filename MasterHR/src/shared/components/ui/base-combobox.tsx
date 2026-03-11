@@ -3,7 +3,9 @@ import { CheckIcon, XIcon } from 'lucide-react';
 
 import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/components/ui/button';
-import { BaseInput, Separator } from '@/shared/components/ui';
+import { BaseInput } from '@/shared/components/ui/base-input';
+
+import { Separator } from './separator';
 
 import type { RefObject } from 'react';
 
