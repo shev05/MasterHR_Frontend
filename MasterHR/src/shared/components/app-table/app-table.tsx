@@ -1,17 +1,17 @@
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { ChevronDown, ChevronsUpDown, ChevronUp } from 'lucide-react';
 
-import { DEFAULT_QUERIES } from '@/shared/constants';
-import { OrderDirection } from '@/shared/interface';
 import { SuspenseWrapper, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/components/ui';
-import { cn } from '@/shared/lib';
+import { DEFAULT_QUERIES } from '@/shared/constants/base-query-params';
+import { cn } from '@/shared/lib/cn';
 import { Checkbox } from '@/shared/components/controls';
 import { CenteredSpinner } from '@/shared/components/centered-spinner';
+import { OrderDirection } from '@/shared/interface';
 
 import { AppTablePagination } from './app-table-pagination';
 
-import type { ApiPaginatedResponse, BaseQuries } from '@/shared/interface';
 import type { ColumnDef, Row, RowSelectionState } from '@tanstack/react-table';
+import type { ApiPaginatedResponse, BaseQueries } from '@/shared/interface';
 
 const defaultColumnSizing = {
   size: 150,
@@ -25,15 +25,17 @@ export type AppTableProps<T> = {
   data: Undefinable<T[]>;
   meta: Undefinable<Partial<ApiPaginatedResponse<T>['meta']>>;
   isDataFetching?: boolean;
+  isDataPending?: boolean;
   totalPages?: number;
   totalItems?: number;
+  perPage?: number;
   // library type columns /node_modules/@tanstack/table-core/build/lib/core/table.d.ts: ColumnDef<TData, any>[];
   // eslint-disable-next-line
   columns: ColumnDef<T, any>[];
 
   onSelectionChange?: (args: T[]) => void;
-  onPaginationParamsChange?: (args: Pick<BaseQuries, 'page' | 'per_page'>) => void;
-  onSortingParamsChange?: (args: Pick<BaseQuries, 'sort_by' | 'sort_direction'>) => void;
+  onPaginationParamsChange?: (args: Pick<BaseQueries, 'page' | 'per_page'>) => void;
+  onSortingParamsChange?: (args: Pick<BaseQueries, 'sort_by' | 'sort_direction'>) => void;
 
   selection?: RowSelectionState | undefined;
   selectionMode?: boolean;
@@ -49,13 +51,16 @@ export const AppTable = <T,>({
   data,
   meta,
   isDataFetching,
+  isDataPending,
+  perPage,
   getRowId = undefined,
 
   onPaginationParamsChange,
   onSortingParamsChange,
   onSelectionChange,
 
-  singleSelection = false,
+  selection = {},
+  singleSelection = true,
 
   selectionMode = false,
   sortingMode = true,
@@ -71,12 +76,15 @@ export const AppTable = <T,>({
         pageIndex: (meta?.page ?? DEFAULT_QUERIES.page) - 1,
         pageSize: meta?.per_page ?? DEFAULT_QUERIES.per_page,
       },
+      // sorting: [{ id: '', desc: true }],
+      rowSelection: selection,
     },
 
     getRowId,
 
     getCoreRowModel: getCoreRowModel(),
 
+    //for server side sorting and pagination
     manualPagination: true,
     manualSorting: true,
     enableRowSelection: true,
@@ -86,7 +94,6 @@ export const AppTable = <T,>({
 
       if (singleSelection) {
         const selectedRowIds = Object.keys(newRowSelection);
-
         if (selectedRowIds.length > 0) {
           const currentSelection = table.getState().rowSelection;
           const newlySelectedRowId = selectedRowIds.find((id) => newRowSelection[id] && !currentSelection[id]);
@@ -144,125 +151,130 @@ export const AppTable = <T,>({
 
   return (
     <div className='relative flex h-full flex-col justify-between gap-1 overflow-hidden'>
-      {isDataFetching && <CenteredSpinner />}
-      <Table wrapperClassName='border rounded-xs h-full justify-between relative '>
-        <TableHeader className='bg-table-head sticky top-0 z-10'>
-          {TABLE_HEADER_GROUPS.map((headerGroup) => {
-            return (
-              <TableRow key={headerGroup.id}>
-                <SuspenseWrapper condition={!!data?.length && selectionMode}>
-                  <TableHead key={'checkbox'} colSpan={1} style={{ width: `30px` }}>
-                    {singleSelection ? null : (
-                      <Checkbox
-                        checked={table.getIsAllPageRowsSelected()}
-                        indeterminate={table.getIsSomePageRowsSelected()}
-                        onCheckedChange={(_checked, eventDetail) =>
-                          table.getToggleAllPageRowsSelectedHandler()(eventDetail.event)
-                        }
-                      />
-                    )}
-                  </TableHead>
-                </SuspenseWrapper>
-                {headerGroup.headers.map((header) => {
-                  const isHeaderSorted = header.column.getIsSorted();
-                  const headAlign = header.column.columnDef.meta?.style.textAlign;
-
-                  return (
-                    <TableHead
-                      key={header.id}
-                      colSpan={header.colSpan}
-                      style={{ width: `${header.getSize()}px` }}
-                      align={header.column.columnDef.meta?.style.textAlign}
-                      className='text-foreground font-medium'
-                    >
-                      {header.isPlaceholder ? null : (
-                        <div
-                          onClick={(e) => {
-                            if (!sortingMode) return;
-                            header.column.getToggleSortingHandler()?.(e);
-                          }}
-                          className={cn(
-                            'group/table flex items-center gap-2',
-                            sortingMode && header.column.getCanSort() && 'cursor-pointer select-none',
-                            headAlign === 'left' && 'justify-start',
-                            headAlign === 'right' && 'justify-end',
-                            headAlign === 'center' && 'justify-center'
-                          )}
-                        >
-                          {flexRender(header.column.columnDef.header, header.getContext())}
-
-                          <SuspenseWrapper condition={sortingMode && header.column.getCanSort()}>
-                            {isHeaderSorted ? (
-                              { asc: <ChevronUp size={10} />, desc: <ChevronDown size={10} /> }[
-                                isHeaderSorted as string
-                              ]
-                            ) : (
-                              <ChevronsUpDown size={10} className='invisible group-hover/table:visible' />
-                            )}
-                          </SuspenseWrapper>
-                        </div>
-                      )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            );
-          })}
-        </TableHeader>
-        <TableBody className='h-full min-h-20'>
-          {TABLE_ROWS.length > 0 ? (
-            TABLE_ROWS.map((row) => {
+      <Table wrapperClassName='border rounded-md h-full justify-between relative '>
+        <SuspenseWrapper condition={isDataFetching} fallback={<CenteredSpinner />}>
+          <TableHeader className='bg-table-head sticky top-0 z-10'>
+            {TABLE_HEADER_GROUPS.map((headerGroup) => {
               return (
-                <TableRow key={row.id}>
+                <TableRow key={headerGroup.id}>
                   <SuspenseWrapper condition={selectionMode}>
-                    <TableCell key={'checkbox'}>
-                      {row.depth === 0 && (
+                    <TableHead key={'checkbox'} colSpan={1} style={{ width: `30px` }}>
+                      {singleSelection ? null : (
                         <Checkbox
-                          checked={row.getIsSelected()}
-                          disabled={!row.getCanSelect()}
-                          indeterminate={row.getIsSomeSelected()}
-                          onCheckedChange={(_checked, eventDetail) => {
-                            row.getToggleSelectedHandler()(eventDetail.event);
-                          }}
+                          checked={table.getIsAllPageRowsSelected()}
+                          indeterminate={table.getIsSomePageRowsSelected()}
+                          onCheckedChange={(_checked, eventDetail) =>
+                            table.getToggleAllPageRowsSelectedHandler()(eventDetail.event)
+                          }
                         />
                       )}
-                    </TableCell>
+                    </TableHead>
                   </SuspenseWrapper>
-                  {row.getVisibleCells().map((cell) => {
-                    const cellAlign = cell.column.columnDef.meta?.style.textAlign;
+                  {headerGroup.headers.map((header) => {
+                    const isHeaderSorted = header.column.getIsSorted();
+                    const headAlign = header.column.columnDef.meta?.style.textAlign;
 
                     return (
-                      <TableCell
-                        align={cellAlign}
-                        key={cell.id}
-                        style={{ width: `${cell.column.getSize()}px` }}
-                        className={cn(
-                          'text-wrap break-all',
-                          cellAlign === 'left' && 'justify-start',
-                          cellAlign === 'right' && 'justify-end',
-                          cellAlign === 'center' && 'justify-center'
-                        )}
+                      <TableHead
+                        key={header.id}
+                        colSpan={header.colSpan}
+                        style={{ width: `${header.getSize()}px` }}
+                        align={header.column.columnDef.meta?.style.textAlign}
+                        className={cn('text-foreground font-medium', isDataPending && 'pointer-events-none blur')}
                       >
-                        <span className='line-clamp-5'>
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </span>
-                      </TableCell>
+                        {header.isPlaceholder ? null : (
+                          <div
+                            onClick={(e) => {
+                              if (!sortingMode) return;
+                              header.column.getToggleSortingHandler()?.(e);
+                            }}
+                            className={cn(
+                              'group/table flex items-center gap-2',
+                              sortingMode && header.column.getCanSort() && 'cursor-pointer select-none',
+                              headAlign === 'left' && 'justify-start',
+                              headAlign === 'right' && 'justify-end',
+                              headAlign === 'center' && 'justify-center'
+                            )}
+                          >
+                            {flexRender(header.column.columnDef.header, header.getContext())}
+                            <SuspenseWrapper condition={sortingMode && header.column.getCanSort()}>
+                              {isHeaderSorted ? (
+                                {
+                                  asc: <ChevronUp size={10} className='text-primary' />,
+                                  desc: <ChevronDown size={10} className='text-primary' />,
+                                }[isHeaderSorted as string]
+                              ) : (
+                                <ChevronsUpDown
+                                  size={10}
+                                  className='text-primary invisible group-hover/table:visible'
+                                />
+                              )}
+                            </SuspenseWrapper>
+                          </div>
+                        )}
+                      </TableHead>
                     );
                   })}
                 </TableRow>
               );
-            })
-          ) : (
-            <TableRow key='empty'>
-              <TableCell colSpan={Number.MAX_SAFE_INTEGER} className='text-muted-foreground text-center'>
-                Нет данныx
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
+            })}
+          </TableHeader>
+          <TableBody>
+            {TABLE_ROWS.length > 0 ? (
+              TABLE_ROWS.map((row) => {
+                return (
+                  <TableRow key={row.id}>
+                    <SuspenseWrapper condition={selectionMode}>
+                      <TableCell key={'checbox'}>
+                        {row.depth === 0 && (
+                          <Checkbox
+                            checked={row.getIsSelected()}
+                            disabled={!row.getCanSelect()}
+                            indeterminate={row.getIsSomeSelected()}
+                            onCheckedChange={(_checked, eventDetail) => {
+                              row.getToggleSelectedHandler()(eventDetail.event);
+                            }}
+                          />
+                        )}
+                      </TableCell>
+                    </SuspenseWrapper>
+                    {row.getVisibleCells().map((cell) => {
+                      const cellAlign = cell.column.columnDef.meta?.style.textAlign;
+
+                      return (
+                        <TableCell
+                          align={cellAlign}
+                          key={cell.id}
+                          style={{ width: `${cell.column.getSize()}px` }}
+                          className={cn(
+                            'whitespace-normal text-wrap break-words',
+                            cellAlign === 'left' && 'justify-start',
+                            cellAlign === 'right' && 'justify-end',
+                            cellAlign === 'center' && 'justify-center'
+                          )}
+                        >
+                          <span className='line-clamp-5'>
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          </span>
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                );
+              })
+            ) : (
+              <TableRow
+                key='empty'
+                className='bg-background hover:bg-background absolute inset-0 flex h-full w-full items-center justify-center'
+              >
+                <TableCell className='text-center'>Нет данныx</TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </SuspenseWrapper>
       </Table>
-      <SuspenseWrapper condition={!!data?.length && paginationMode}>
-        <AppTablePagination meta={meta} table={table} selectionMode={selectionMode} />
+      <SuspenseWrapper condition={paginationMode || !!data?.length}>
+        <AppTablePagination meta={meta} table={table} selectionMode={selectionMode} perPage={perPage} />
       </SuspenseWrapper>
     </div>
   );

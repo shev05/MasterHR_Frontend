@@ -3,14 +3,14 @@ export enum OrderDirection {
   ASC = 'asc',
 }
 
-export type BaseQuries = Partial<{
+export type BaseQueries = Partial<{
   page: number;
   per_page: number;
   sort_by: string;
   sort_direction: OrderDirection;
 }>;
 
-export type GetQueries<T = undefined> = T & BaseQuries;
+export type GetQueries<T = undefined> = T & BaseQueries;
 
 export type DBFields = {
   created_at: string;
@@ -27,7 +27,7 @@ export type ApiResponse<T = null> = {
 };
 
 export type ApiPaginatedResponse<T> = ApiResponse<Array<T>> & {
-  meta: Required<BaseQuries> & {
+  meta: Required<BaseQueries> & {
     total_elements: number;
     total_pages: number;
   };

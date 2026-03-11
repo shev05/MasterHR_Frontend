@@ -11,9 +11,10 @@ type AppTablePaginationProps<T> = {
   table: Table<T>;
   meta: Undefinable<Partial<ApiPaginatedResponse<T>['meta']>>;
   selectionMode?: boolean;
+  perPage?: number;
 };
 
-export const AppTablePagination = <T,>({ table, meta, selectionMode }: AppTablePaginationProps<T>) => {
+export const AppTablePagination = <T,>({ table, meta, selectionMode, perPage }: AppTablePaginationProps<T>) => {
   const { total_elements, total_pages, page } = meta || {};
   return (
     <div className='flex items-center justify-between gap-2 text-nowrap text-xs'>
@@ -27,7 +28,7 @@ export const AppTablePagination = <T,>({ table, meta, selectionMode }: AppTableP
             <Select
               fieldOrientation='horizontal'
               label='Строк на странице'
-              value={table.getState()?.pagination?.pageSize?.toString()}
+              value={perPage || table.getState()?.pagination?.pageSize?.toString()}
               onValueChange={(value) => {
                 table.setPagination({
                   pageIndex: 0,
