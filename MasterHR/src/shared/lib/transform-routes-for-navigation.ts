@@ -8,7 +8,7 @@ export const transformRoutesForNavigation = (route: RouteHierarchyTransformedTyp
     .map((item) => {
       const baseItem = {
         title: item.label,
-        to: item.absPath,
+        path: item.absPath,
         icon: item.icon,
         permissions: item.permissions,
       };
@@ -19,7 +19,7 @@ export const transformRoutesForNavigation = (route: RouteHierarchyTransformedTyp
           .map((child) => {
             return {
               title: child.label,
-              to: `${item.absPath}/${child.path}`,
+              path: `${item.absPath}/${child.path}`,
               icon: child.icon,
               permissions: child.permissions,
             };

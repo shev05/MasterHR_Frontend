@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Eye, Pencil } from 'lucide-react';
 
-import { Button, Tooltip, TooltipTrigger, TooltipPositioner, TooltipContent } from '@/shared/components';
+import { Button, Tooltip, TooltipContent, TooltipPositioner, TooltipTrigger } from '@/shared/components/ui';
 
 import type { BaseGetColumnsProps } from '@/shared/interface';
 

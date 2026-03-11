@@ -1,7 +1,8 @@
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 
-import { Button, Select, SuspenseWrapper } from '@/shared/components';
+import { Button, SuspenseWrapper } from '@/shared/components/ui';
 import { TABLE_PER_PAGE_OPTIONS } from '@/shared/constants';
+import { Select } from '@/shared/components/controls';
 
 import type { ApiPaginatedResponse } from '@/shared/interface';
 import type { Table } from '@tanstack/react-table';

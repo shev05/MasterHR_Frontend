@@ -1,9 +1,6 @@
-import { Link, useMatches } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
+import { Link, useMatches } from 'react-router-dom';
 
-import { cn } from '@/shared/lib';
-
-import { isAccordionItemGuard } from './app-sidebar.lib';
 import {
   Collapsible,
   CollapsibleContent,
@@ -13,29 +10,31 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
-} from './ui';
+} from '@/shared/components/ui';
+import { cn } from '@/shared/lib/cn';
 
-import type { MenuItem } from './app-sidebar.lib';
+import { isAccordionItemGuard, type MenuItem } from './app-sidebar.lib';
+
 import type { FC, JSX } from 'react';
 
-type NavMenuProps = { items: MenuItem[] };
+type NavMenuProps = { items: MenuItem[] | undefined };
 
 export const NavMenu: FC<NavMenuProps> = ({ items }) => {
   const matches = useMatches();
   const currentPagePath = matches.at(-1)?.pathname;
 
   const renderMenuItem = (item: MenuItem, level = 0): JSX.Element | null => {
-    if (!item) return null;
+    if (!item || !item.path || !item.label) return null;
 
-    const isActiveLink = currentPagePath?.includes(item.to);
+    const isActiveLink = currentPagePath?.includes(item.path);
 
     if (!isAccordionItemGuard(item)) {
       return (
-        <SidebarMenuItem key={`${item.title}-${level}`}>
-          <Link to={item.to} className='cursor-pointer! w-full'>
-            <SidebarMenuButton tooltip={item.title} className={cn('', isActiveLink && 'bg-sidebar-accent')}>
+        <SidebarMenuItem key={`${item.label}-${level}`}>
+          <Link to={item.path} className='cursor-pointer! w-full'>
+            <SidebarMenuButton tooltip={item.label} className={cn('', isActiveLink && 'bg-sidebar-accent')}>
               {item.icon && level === 0 && <item.icon />}
-              {item.title}
+              {item.label}
             </SidebarMenuButton>
           </Link>
         </SidebarMenuItem>
@@ -43,13 +42,13 @@ export const NavMenu: FC<NavMenuProps> = ({ items }) => {
     }
 
     return (
-      <SidebarMenuItem key={`${item.title}-${level}`}>
+      <SidebarMenuItem key={`${item.label}-${level}`}>
         <Collapsible className='group/collapsible'>
           <CollapsibleTrigger
             render={
-              <SidebarMenuButton tooltip={item.title}>
+              <SidebarMenuButton tooltip={item.label}>
                 {item.icon && <item.icon />}
-                <span>{item.title}</span>
+                <span>{item.label}</span>
                 <ChevronDown className='ml-auto size-3 transition-all ease-out group-data-[panel-open]:rotate-180' />
               </SidebarMenuButton>
             }
@@ -64,7 +63,7 @@ export const NavMenu: FC<NavMenuProps> = ({ items }) => {
 
   return (
     <SidebarGroup>
-      <SidebarMenu>{items.map((item) => renderMenuItem(item))}</SidebarMenu>
+      <SidebarMenu>{items?.map((item) => renderMenuItem(item))}</SidebarMenu>
     </SidebarGroup>
   );
 };

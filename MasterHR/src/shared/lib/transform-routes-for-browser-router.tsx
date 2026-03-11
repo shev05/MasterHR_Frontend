@@ -1,18 +1,12 @@
-import { lazy } from 'react';
-
-import type { RouteHierarchyTransformedType, RouteHierarchyType } from '@/shared/builders';
 import type { RouteObject } from 'react-router-dom';
+import type { AppRouteObject } from '@/shared/constants/routes/authenticated-routes';
 
-const PrivateRoute = lazy(() =>
-  import('@/shared/components/private-route').then((module) => ({ default: module.PrivateRoute }))
-);
+export const transformRoutesForBrowserRouter = (route: AppRouteObject): RouteObject => {
+  const { path, children, element, index, handle } = route;
 
-export const transformRoutesForBrowserRouter = (
-  route: RouteHierarchyTransformedType | RouteHierarchyType[string]
-): RouteObject => {
-  const { path, children, element, index, label, permissions } = route;
+  const label = handle?.label;
 
-  const protectedElement = element && <PrivateRoute permissions={permissions}>{element}</PrivateRoute>;
+  const protectedElement = element;
 
   if (index) {
     const indexRoute: RouteObject = {
@@ -22,9 +16,10 @@ export const transformRoutesForBrowserRouter = (
 
     if (label) {
       indexRoute.handle = {
-        crumb: label,
+        crumb: { label },
       };
     }
+
     return indexRoute;
   }
 

@@ -1,7 +1,9 @@
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Button, FormInput, FormPasswordInput, toast } from '@/shared/components';
+import { Button } from '@/shared/components/ui';
+import { toast } from '@/shared/components/app-toaster';
+import { FormInput, FormPasswordInput } from '@/shared/components/controls';
 
 import { LOGIN_DEFAULT_VALUES, LOGIN_FIELDS, LOGIN_FORM_SCHEMA } from './login-form.lib';
 

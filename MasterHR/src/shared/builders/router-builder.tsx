@@ -1,6 +1,6 @@
 import { generatePath as generatePathOriginal } from 'react-router-dom';
 
-import type { InferRouteKeys, RouteHierarchyNode, SVGComponent } from '@/shared/interface';
+import type { RouteHierarchyNode, SVGComponent, InferRouteKeys } from '@/shared/interface';
 import type { JSX } from 'react';
 
 export type RouteRecordSharedType = {
@@ -9,6 +9,7 @@ export type RouteRecordSharedType = {
   permissions?: Array<string>;
   dataId?: string;
   element?: JSX.Element;
+  // flag for https://reactrouter.com/6.30.0/route/route#index*/
   index?: boolean;
 };
 
@@ -21,6 +22,14 @@ export type RouteHierarchyTransformedType = {
   absPath: string;
   children?: RouteHierarchyType;
 
+  /* Get direct (by default) or all children of a route.
+   *
+   * If indirect === false: ROOT.getChildren() = {ROOT_MATERIAL_MANAGER, ROOT_MENUS_MANAGER}
+   *
+   * If indirect === true: ROOT.getChildren() = {ROOT_MATERIAL_MANAGER, ROOT_MATERIAL_MANAGER_CREATE, etc.}
+   *
+   * If comparator passed, sorts children. See sort() for comparator usage
+   */
   getChildren: (
     indirect?: boolean,
     comparator?: (a: RouteHierarchyTransformedType, b: RouteHierarchyTransformedType) => number
@@ -54,7 +63,6 @@ export const asTransformedRoutes = <T extends RouteHierarchyType>(hierarchy: T):
         Object.assign(acc, accumulated);
       }
       const absPath = pathJoin([parentPath, value.path || '']);
-
       acc[currentKey] = {
         ...value,
         key: currentKey,
@@ -64,12 +72,10 @@ export const asTransformedRoutes = <T extends RouteHierarchyType>(hierarchy: T):
         index: value.index,
         permissions: value.permissions,
         children: value.children,
-
         getChildren: () => [],
         generatePath: () => absPath,
         getChildrenPermissions: () => [],
       };
-
       return acc;
     }, {});
   };
