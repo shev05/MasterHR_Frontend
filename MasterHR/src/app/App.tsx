@@ -6,9 +6,12 @@ import './index.css';
 
 import { queryClient } from '@/api/query-client';
 import { DialogProvider, ThemeProvider } from '@/providers';
-import { CenteredSpinner, ErrorBoundary, Toaster, ToastProvider } from '@/shared/components';
+import { Toaster } from '@/shared/components/app-toaster';
 import { UNAUTHENTICATED_ROUTER, AUTHENTICATED_ROUTER } from '@/shared/constants/routes';
 import { useUserStore } from '@/store';
+import { ToastProvider } from '@/shared/components/ui';
+import { ErrorBoundary } from '@/shared/components/error-boundary';
+import { CenteredSpinner } from '@/shared/components/centered-spinner';
 
 function App() {
   const { isAuth } = useUserStore();
@@ -22,7 +25,7 @@ function App() {
         <DialogProvider>
           <ErrorBoundary>
             <Suspense fallback={<CenteredSpinner />}>
-              <RouterProvider router={isAuth ? AUTHENTICATED_ROUTER : UNAUTHENTICATED_ROUTER} />
+              <RouterProvider router={!isAuth ? AUTHENTICATED_ROUTER : UNAUTHENTICATED_ROUTER} />
             </Suspense>
           </ErrorBoundary>
         </DialogProvider>

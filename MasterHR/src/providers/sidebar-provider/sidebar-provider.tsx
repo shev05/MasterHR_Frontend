@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useIsMobile } from '@/shared/hooks';
-import { TooltipProvider } from '@/shared/components';
+import { TooltipProvider } from '@/shared/components/ui';
 import { cn } from '@/shared/lib';
 
 import { SidebarContext } from './sidebar-context';

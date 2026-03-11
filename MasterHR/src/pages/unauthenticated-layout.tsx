@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 
 import backImg from '@/assets/images/back.webp';
-import { ModeToggle } from '@/shared/components';
+import { ModeToggle } from '@/shared/components/mode-toggle';
 
 import type { FC } from 'react';
 

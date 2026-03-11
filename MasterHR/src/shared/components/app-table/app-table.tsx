@@ -3,19 +3,12 @@ import { ChevronDown, ChevronsUpDown, ChevronUp } from 'lucide-react';
 
 import { DEFAULT_QUERIES } from '@/shared/constants';
 import { OrderDirection } from '@/shared/interface';
-import {
-  AppTablePagination,
-  CenteredSpinner,
-  Checkbox,
-  SuspenseWrapper,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/shared/components';
+import { SuspenseWrapper, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/components/ui';
 import { cn } from '@/shared/lib';
+import { Checkbox } from '@/shared/components/controls';
+import { CenteredSpinner } from '@/shared/components/centered-spinner';
+
+import { AppTablePagination } from './app-table-pagination';
 
 import type { ApiPaginatedResponse, BaseQuries } from '@/shared/interface';
 import type { ColumnDef, Row, RowSelectionState } from '@tanstack/react-table';
