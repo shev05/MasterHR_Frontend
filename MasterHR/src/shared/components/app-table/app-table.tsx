@@ -34,7 +34,7 @@ export type AppTableProps<T> = {
   columns: ColumnDef<T, any>[];
 
   onSelectionChange?: (args: T[]) => void;
-  onPaginationParamsChange?: (args: Pick<BaseQueries, 'page' | 'per_page'>) => void;
+  onPaginationParamsChange?: (args: Pick<BaseQueries, 'pageNumber' | 'pageSize'>) => void;
   onSortingParamsChange?: (args: Pick<BaseQueries, 'sort_by' | 'sort_direction'>) => void;
 
   selection?: RowSelectionState | undefined;
@@ -73,8 +73,8 @@ export const AppTable = <T,>({
     rowCount: meta?.total_elements,
     state: {
       pagination: {
-        pageIndex: (meta?.page ?? DEFAULT_QUERIES.page) - 1,
-        pageSize: meta?.per_page ?? DEFAULT_QUERIES.per_page,
+        pageIndex: (meta?.pageNumber ?? DEFAULT_QUERIES.pageNumber) - 1,
+        pageSize: meta?.pageSize ?? DEFAULT_QUERIES.pageSize,
       },
       // sorting: [{ id: '', desc: true }],
       rowSelection: selection,
@@ -127,8 +127,8 @@ export const AppTable = <T,>({
       const newPagination = typeof updater === 'function' ? updater(table.getState().pagination) : updater;
 
       onPaginationParamsChange?.({
-        page: newPagination.pageIndex + 1,
-        per_page: newPagination.pageSize,
+        pageNumber: newPagination.pageIndex + 1,
+        pageSize: newPagination.pageSize,
       });
     },
     onSortingChange: (updater) => {

@@ -10,8 +10,8 @@ import { Separator } from '@/shared/components/ui/separator';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/shared/components/ui/sheet';
 import { Skeleton } from '@/shared/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipPositioner, TooltipTrigger } from '@/shared/components/ui/tooltip';
-import { useIsMobile } from '@/shared/hooks';
 import { cn } from '@/shared/lib/cn';
+import { useIsMobile } from '@/shared/hooks';
 
 const SIDEBAR_WIDTH_MOBILE = '18rem';
 
@@ -75,6 +75,7 @@ function Sidebar({
       data-side={side}
       data-slot='sidebar'
     >
+      {/* This is what handles the sidebar gap on desktop */}
       <div
         data-slot='sidebar-gap'
         className={cn(

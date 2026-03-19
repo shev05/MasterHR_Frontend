@@ -13,9 +13,10 @@ import {
 } from '@/shared/components/ui';
 import { cn } from '@/shared/lib/cn';
 
-import { isAccordionItemGuard, type MenuItem } from './app-sidebar.lib';
+import { isAccordionItemGuard } from './app-sidebar.lib';
 
 import type { FC, JSX } from 'react';
+import type { MenuItem } from './app-sidebar.lib';
 
 type NavMenuProps = { items: MenuItem[] | undefined };
 
@@ -49,7 +50,7 @@ export const NavMenu: FC<NavMenuProps> = ({ items }) => {
               <SidebarMenuButton tooltip={item.label}>
                 {item.icon && <item.icon />}
                 <span>{item.label}</span>
-                <ChevronDown className='ml-auto size-3 transition-all ease-out group-data-[panel-open]:rotate-180' />
+                <ChevronDown className='text-gradient-start group-data-panel-open:rotate-180 ms-auto size-3 transition-all ease-out' />
               </SidebarMenuButton>
             }
           />

@@ -4,8 +4,8 @@ export enum OrderDirection {
 }
 
 export type BaseQueries = Partial<{
-  page: number;
-  per_page: number;
+  pageNumber: number;
+  pageSize: number;
   sort_by: string;
   sort_direction: OrderDirection;
 }>;
@@ -13,16 +13,16 @@ export type BaseQueries = Partial<{
 export type GetQueries<T = undefined> = T & BaseQueries;
 
 export type DBFields = {
+  id: string;
   created_at: string;
   updated_at: string;
-  deleted_at: string;
 };
 
 export type GetType<T> = T & DBFields;
 export type WithId<T> = T & { id: string };
 
 export type ApiResponse<T = null> = {
-  data: T;
+  list: T;
   message: string;
 };
 

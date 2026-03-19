@@ -7,7 +7,7 @@ export const transformRoutesForNavigation = (route: RouteHierarchyTransformedTyp
     .filter((item) => item.path !== '*' && !item.index)
     .map((item) => {
       const baseItem = {
-        title: item.label,
+        label: item.label,
         path: item.absPath,
         icon: item.icon,
         permissions: item.permissions,
@@ -18,7 +18,7 @@ export const transformRoutesForNavigation = (route: RouteHierarchyTransformedTyp
           .filter((child) => child.path !== '*' && !child.index)
           .map((child) => {
             return {
-              title: child.label,
+              label: child.label,
               path: `${item.absPath}/${child.path}`,
               icon: child.icon,
               permissions: child.permissions,

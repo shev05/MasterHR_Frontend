@@ -6,9 +6,9 @@ function TooltipProvider({ delay = 0, ...props }: TooltipPrimitive.Provider.Prop
   return <TooltipPrimitive.Provider data-slot='tooltip-provider' delay={delay} {...props} />;
 }
 
-function Tooltip({ ...props }: TooltipPrimitive.Root.Props) {
+function Tooltip({ delay, ...props }: TooltipPrimitive.Root.Props & { delay?: number }) {
   return (
-    <TooltipProvider>
+    <TooltipProvider delay={delay || 1000}>
       <TooltipPrimitive.Root data-slot='tooltip' {...props} />
     </TooltipProvider>
   );
@@ -36,7 +36,7 @@ function TooltipContent({ className, children, ...props }: TooltipPrimitive.Popu
     <TooltipPrimitive.Popup
       data-slot='tooltip-content'
       className={cn(
-        'bg-primary text-primary-foreground animate-in fade-in-0 zoom-in-95 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-(--radix-tooltip-content-transform-origin) z-50 w-fit text-balance rounded-md px-3 py-1.5 text-xs',
+        'bg-primary text-primary-foreground animate-in fade-in-0 zoom-in-95 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-fit text-balance rounded-md px-3 py-1.5 text-xs duration-700',
         className
       )}
       {...props}
@@ -64,4 +64,4 @@ function TooltipArrow({ className, ...props }: TooltipPrimitive.Arrow.Props) {
   );
 }
 
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider, TooltipPositioner };
+export { Tooltip, TooltipContent, TooltipPositioner, TooltipProvider, TooltipTrigger };

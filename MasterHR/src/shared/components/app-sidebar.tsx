@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { User } from 'lucide-react';
 
 import { useIsMobile } from '@/shared/hooks';
+import { cn } from '@/shared/lib';
 
 import { NavMenu } from './nav-menu';
 import {
@@ -13,6 +14,8 @@ import {
   SidebarTrigger,
   SidebarRail,
   useSidebar,
+  SidebarMenuButton,
+  buttonVariants,
 } from './ui';
 import { filterAllowedItems } from './app-sidebar.lib';
 
@@ -46,7 +49,7 @@ export function AppSidebar({ userPermissions, ...props }: AppSidebarProps) {
       </SidebarContent>
       <SidebarFooter className='border-t'>
         <SuspenseWrapper condition={!isMobile}>
-          <SidebarTrigger />
+          <SidebarMenuButton render={<SidebarTrigger className={cn(buttonVariants({ variant: 'outline' }))} />} />
         </SuspenseWrapper>
       </SidebarFooter>
       <SidebarRail />
