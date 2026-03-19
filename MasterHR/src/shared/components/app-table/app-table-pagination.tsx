@@ -15,7 +15,7 @@ type AppTablePaginationProps<T> = {
 };
 
 export const AppTablePagination = <T,>({ table, meta, selectionMode, perPage }: AppTablePaginationProps<T>) => {
-  const { total_elements, total_pages, page } = meta || {};
+  const { total_elements, total_pages, pageNumber: page } = meta || {};
   return (
     <div className='flex items-center justify-between gap-2 text-nowrap text-xs'>
       <SuspenseWrapper condition={!!selectionMode}>

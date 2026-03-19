@@ -1,6 +1,6 @@
-import { z } from 'zod';
+import * as Yup from 'yup';
 
-import { minMessage } from '@/shared/lib';
+import { requiredString, VAL_MESSAGES } from '@/shared/lib';
 
 export enum LOGIN_FIELDS {
   LOGIN = 'login',
@@ -12,7 +12,9 @@ export const LOGIN_DEFAULT_VALUES = {
   [LOGIN_FIELDS.PASSWORD]: '',
 };
 
-export const LOGIN_FORM_SCHEMA = z.object({
-  [LOGIN_FIELDS.LOGIN]: z.string().min(2, { message: minMessage(2) }),
-  [LOGIN_FIELDS.PASSWORD]: z.string().min(2, { message: minMessage(2) }),
+export const LOGIN_FORM_SCHEMA = Yup.object({
+  [LOGIN_FIELDS.LOGIN]: requiredString().max(15, VAL_MESSAGES.FIELD.MAX_SIZE('Логин', 15)),
+  [LOGIN_FIELDS.PASSWORD]: requiredString(),
 });
+
+export type LoginFormValue = Yup.InferType<typeof LOGIN_FORM_SCHEMA>;

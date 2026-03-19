@@ -1,3 +1,4 @@
+import { Plus } from 'lucide-react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Button as ButtonPrimitive } from '@base-ui/react/button';
 
@@ -42,4 +43,13 @@ function Button({ className, variant, size, ...props }: ButtonProps) {
   return <ButtonPrimitive data-slot='button' className={cn(buttonVariants({ variant, size, className }))} {...props} />;
 }
 
-export { Button, buttonVariants };
+const AddButton = ({ children, ...restProps }: ButtonProps) => {
+  return (
+    <Button {...restProps} onClick={(e) => restProps.onClick?.(e)}>
+      <Plus />
+      {children}
+    </Button>
+  );
+};
+
+export { Button, buttonVariants, AddButton };

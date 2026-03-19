@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import { queryClient } from '@/api/query-client';
+
 import type { GetUser } from '@/api/endpoints';
 
 interface UserState {
@@ -33,6 +35,15 @@ export const useUserStore = create<UserState>()(
 );
 export const useCurrUser = () => useUserStore((state) => state.user);
 export const useIsAuth = () => useUserStore((state) => state.isAuth);
+
+export const addIsAuth = () => {
+  useUserStore.setState({ isAuth: true });
+};
+
+export const removeIsAuth = () => {
+  useUserStore.setState({ isAuth: false });
+  queryClient.cancelQueries();
+};
 
 export const useUserActions = () => {
   const { setUser, deleteUser } = useUserStore();

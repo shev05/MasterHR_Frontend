@@ -21,3 +21,5 @@ export * from './tooltip';
 export * from './sidebar';
 export * from './collapsible';
 export * from './toast';
+export * from './alert-dialog';
+export * from './dialog'

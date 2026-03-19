@@ -12,6 +12,7 @@ import { useUserStore } from '@/store';
 import { ToastProvider } from '@/shared/components/ui';
 import { ErrorBoundary } from '@/shared/components/error-boundary';
 import { CenteredSpinner } from '@/shared/components/centered-spinner';
+import { AlertDialogProvider } from '@/providers/alert-dialog-provider';
 
 function App() {
   const { isAuth } = useUserStore();
@@ -22,13 +23,15 @@ function App() {
         <ToastProvider>
           <Toaster />
         </ToastProvider>
-        <DialogProvider>
-          <ErrorBoundary>
-            <Suspense fallback={<CenteredSpinner />}>
-              <RouterProvider router={!isAuth ? AUTHENTICATED_ROUTER : UNAUTHENTICATED_ROUTER} />
-            </Suspense>
-          </ErrorBoundary>
-        </DialogProvider>
+        <AlertDialogProvider>
+          <DialogProvider>
+            <ErrorBoundary>
+              <Suspense fallback={<CenteredSpinner />}>
+                <RouterProvider router={isAuth ? AUTHENTICATED_ROUTER : UNAUTHENTICATED_ROUTER} />
+              </Suspense>
+            </ErrorBoundary>
+          </DialogProvider>
+        </AlertDialogProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

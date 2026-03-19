@@ -1,3 +1,8 @@
+export type BaseDialogProps = {
+  closeDialog: () => void;
+  isViewMode?: boolean;
+};
+
 export type OptionBase = {
   label: string;
   value: number | string;
@@ -25,3 +30,17 @@ export type BaseGetColumnsProps<T = undefined> = Partial<{
   onEdit: (row: T) => void;
   onDelete: (row: T) => void;
 }>;
+
+export type QueriesSchemaToType<T> = Partial<{
+  [K in keyof T]: T[K] extends 'string'
+    ? string
+    : T[K] extends 'number'
+      ? number
+      : T[K] extends 'boolean'
+        ? boolean
+        : unknown;
+}>;
+
+export type BaseQueryListHookProps<T> = {
+  queries?: T;
+};

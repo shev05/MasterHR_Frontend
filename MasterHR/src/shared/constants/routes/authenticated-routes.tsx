@@ -9,6 +9,12 @@ import type { RouteObject } from 'react-router-dom';
 
 const { AuthenticatedLayout } = lazyImport(() => import('@/pages/authenticated-layout'), 'AuthenticatedLayout');
 
+const { HomePage } = lazyImport(() => import('@/pages/home'), 'HomePage');
+
+const { TagsPage } = lazyImport(() => import('@/pages/administration/tags'), 'TagsPage');
+
+const { ComponentsPage } = lazyImport(() => import('@/pages/components'), 'ComponentsPage');
+
 export type RouteHandle = {
   label?: string;
   icon?: React.ComponentType;
@@ -37,8 +43,26 @@ export const AUTHENTICATED_ROUTES: AppRouteObject = {
 
     {
       path: ROUTES_META.ROOT_HOME.path,
-      // element: <HomePage />,
+      element: <HomePage />,
       handle: getMetaByKey(ROUTES_META.ROOT_HOME),
+    },
+
+    {
+      path: ROUTES_META.ROOT_ADMINISTRATION.path,
+      handle: getMetaByKey(ROUTES_META.ROOT_ADMINISTRATION),
+      children: [
+        {
+          path: ROUTES_META.ROOT_ADMINISTRATION_TAGS.path,
+          handle: getMetaByKey(ROUTES_META.ROOT_ADMINISTRATION_TAGS),
+          element: <TagsPage />,
+        },
+      ],
+    },
+
+    {
+      path: ROUTES_META.ROOT_COMPONENTS.path,
+      element: <ComponentsPage />,
+      handle: getMetaByKey(ROUTES_META.ROOT_COMPONENTS),
     },
   ],
 };

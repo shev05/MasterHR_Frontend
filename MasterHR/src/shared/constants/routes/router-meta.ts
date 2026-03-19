@@ -1,4 +1,4 @@
-import { House } from 'lucide-react';
+import { Component, House, ShieldUser, Tag } from 'lucide-react';
 
 import { asTransformedRoutes } from '@/shared/builders';
 
@@ -18,6 +18,15 @@ export const ROUTES_META = asTransformedRoutes({
         label: 'Страница не найдена',
       },
       HOME: { path: '/home', label: 'Главная. страница', icon: House },
+      ADMINISTRATION: {
+        path: '/administration',
+        label: 'Администрирование',
+        icon: ShieldUser,
+        children: {
+          TAGS: { path: 'tags', label: 'Теги', icon: Tag },
+        },
+      },
+      COMPONENTS: { path: '/components', label: 'Компоненты', icon: Component },
     },
   },
 } as const);
