@@ -28,7 +28,7 @@ export const tagsApi = {
   },
 
   delete: async (tagId: GetTags['id']) => {
-    const response = await httpClient.delete<GetTagsResponse>(API_ROUTES.ROOT_TAGS.generatePath({ tagId }));
+    const response = await httpClient.delete<GetTagsResponse>(API_ROUTES.ROOT_TAGS_TAG_ID.generatePath({ tagId }));
 
     return response.data;
   },

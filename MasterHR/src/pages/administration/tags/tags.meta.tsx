@@ -9,7 +9,7 @@ const columnHelper = createColumnHelper<GetTags>();
 
 type GetColumnsProps = BaseGetColumnsProps<GetTags>;
 
-export const getColumns = ({ ...actions }: GetColumnsProps) => [
+export const getColumns = ({ onDelete }: GetColumnsProps) => [
   columnHelper.accessor('title', {
     id: 'title',
     cell: ({ row }) => <span>{row.original?.title}</span>,
@@ -18,8 +18,6 @@ export const getColumns = ({ ...actions }: GetColumnsProps) => [
   }),
   columnHelper.display({
     ...BASE_ACTION_CELL_CONFIG,
-    cell: ({ row }) => {
-      return <TableActions row={row.original} {...actions} />;
-    },
+    cell: ({ row }) => <TableActions row={row.original} onDelete={onDelete} />,
   }),
 ];
