@@ -1,4 +1,4 @@
-import { toast } from 'sonner';
+import { toast } from '@/shared/components/app-toaster';
 
 import type { AxiosError } from 'axios';
 import type { FieldValues, Path, UseFormSetError } from 'react-hook-form';

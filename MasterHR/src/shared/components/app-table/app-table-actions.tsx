@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
-import { Eye, Pencil } from 'lucide-react';
+import { Eye, Pencil, Trash2 } from 'lucide-react';
 
 import { Button, Tooltip, TooltipContent, TooltipPositioner, TooltipTrigger } from '@/shared/components/ui';
+import { useAlertDialog } from '@/providers/alert-dialog-provider';
 
 import type { BaseGetColumnsProps } from '@/shared/interface';
 
@@ -17,6 +18,8 @@ export const BASE_ACTION_CELL_CONFIG = {
 type TableActionsPopoverProps<T> = BaseGetColumnsProps<T> & { row: T };
 
 export const TableActions = <T,>({ row, ...actions }: TableActionsPopoverProps<T>) => {
+  const { openAlertDialog } = useAlertDialog();
+
   const rowActions = useMemo(() => {
     return Object.entries(actions).reduce<Record<string, () => void>>((acc, [key, handler]) => {
       if (handler) {
@@ -26,9 +29,26 @@ export const TableActions = <T,>({ row, ...actions }: TableActionsPopoverProps<T
     }, {});
   }, [actions, row]);
 
+  const handleButtonDelete = () =>
+    openAlertDialog({
+      variant: 'destructive',
+      title: 'Удаление',
+      desctition: 'Это действие невозможно отменить. Подтвердите удаление !',
+      buttons: [
+        <Button onClick={rowActions.onDelete} variant={'destructive'}>
+          Удалить
+        </Button>,
+      ],
+    });
+
   const ACTIONS_SCHEMA = [
     { action: rowActions.onView, icon: <Eye />, description: 'Просмотр' },
     { action: rowActions.onEdit, icon: <Pencil />, description: 'Редактирование' },
+    {
+      action: rowActions.onDelete ? handleButtonDelete : undefined,
+      icon: <Trash2 className='text-destructive' />,
+      description: 'Удаление',
+    },
   ].filter((item) => item.action !== undefined);
 
   if (ACTIONS_SCHEMA.length === 0) return null;

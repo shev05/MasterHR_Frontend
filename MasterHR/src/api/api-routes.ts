@@ -5,7 +5,7 @@ export const API_ROUTES = asTransformedRoutes({
     path: '/',
     children: {
       ACCOUNT: {
-        path: 'account',
+        path: 'Account',
         children: {
           LOGIN: {
             path: 'login',
@@ -13,12 +13,15 @@ export const API_ROUTES = asTransformedRoutes({
         },
       },
       TAGS: {
-        path: 'tags',
+        path: 'Tags',
         children: {
           TAG_ID: {
             path: ':tagId',
           },
         },
+      },
+      USER_ACTIVATOR: {
+        path: 'UserActivator',
       },
     },
   },
