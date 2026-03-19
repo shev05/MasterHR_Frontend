@@ -22,4 +22,6 @@ export * from './sidebar';
 export * from './collapsible';
 export * from './toast';
 export * from './alert-dialog';
-export * from './dialog'
+export * from './dialog';
+export * from './badge';
+export * from './input-group';

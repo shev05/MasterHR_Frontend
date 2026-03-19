@@ -70,7 +70,7 @@ export const AppTable = <T,>({
     data: data ?? (fallbackData as T[]),
     columns,
     defaultColumn: defaultColumnSizing,
-    rowCount: meta?.total_elements,
+    rowCount: meta?.totalCount,
     state: {
       pagination: {
         pageIndex: (meta?.pageNumber ?? DEFAULT_QUERIES.pageNumber) - 1,

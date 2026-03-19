@@ -28,7 +28,7 @@ export type ApiResponse<T = null> = {
 
 export type ApiPaginatedResponse<T> = ApiResponse<Array<T>> & {
   meta: Required<BaseQueries> & {
-    total_elements: number;
-    total_pages: number;
+    totalCount: number;
+    totalPageCount: number;
   };
 };

@@ -44,3 +44,8 @@ export type QueriesSchemaToType<T> = Partial<{
 export type BaseQueryListHookProps<T> = {
   queries?: T;
 };
+
+export type QuriesParamsType<T> = {
+  filters: Partial<T>;
+  updateFilters: (params: Partial<T>) => void;
+};

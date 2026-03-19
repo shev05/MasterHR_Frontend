@@ -15,7 +15,7 @@ type AppTablePaginationProps<T> = {
 };
 
 export const AppTablePagination = <T,>({ table, meta, selectionMode, perPage }: AppTablePaginationProps<T>) => {
-  const { total_elements, total_pages, pageNumber: page } = meta || {};
+  const { totalCount, totalPageCount, pageNumber } = meta || {};
   return (
     <div className='flex items-center justify-between gap-2 text-nowrap text-xs'>
       <SuspenseWrapper condition={!!selectionMode}>
@@ -23,7 +23,7 @@ export const AppTablePagination = <T,>({ table, meta, selectionMode, perPage }: 
         выбрано
       </SuspenseWrapper>
       <div className='items_center flex w-full justify-end gap-4'>
-        <SuspenseWrapper condition={!!total_elements}>
+        <SuspenseWrapper condition={!!totalCount}>
           <div className='flex items-center gap-2'>
             <Select
               fieldOrientation='horizontal'
@@ -38,14 +38,14 @@ export const AppTablePagination = <T,>({ table, meta, selectionMode, perPage }: 
               }}
               options={TABLE_PER_PAGE_OPTIONS}
             />
-            из {total_elements}
+            из {totalCount}
           </div>
         </SuspenseWrapper>
-        <SuspenseWrapper condition={!!total_pages}>
+        <SuspenseWrapper condition={!!totalPageCount}>
           <p className='inline-flex items-center gap-2'>
             <span>Страница:</span>
             <span>
-              {page} из {total_pages}
+              {pageNumber} из {totalPageCount}
             </span>
           </p>
           <div className='flex gap-1.5'>
