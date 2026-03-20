@@ -28,8 +28,8 @@ export function UserActivatorPage() {
   const { mutate: activate, isPending: activateIsPending } = useActivateUser();
 
   const handleActivate = (user?: GetUserActivator) => {
-    if (!user?.id) return;
-    activate(user.id, {
+    if (!user?.userId) return;
+    activate(user.userId, {
       onSuccess: () => {
         toast.success(MESSAGE_API.activate_success);
       },
