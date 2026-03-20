@@ -1,7 +1,11 @@
 import { httpClient } from '@/api/http-client';
 import { API_ROUTES } from '@/api/api-routes';
 
-import type { GetUserActivatorPaginatedResponse, UserActivatorQueries } from './user-activator.interface';
+import type {
+  GetUserActivator,
+  GetUserActivatorPaginatedResponse,
+  UserActivatorQueries,
+} from './user-activator.interface';
 
 export const userActivatorApi = {
   getList: async ({ ...queries }: UserActivatorQueries, signal: AbortSignal) => {
@@ -13,5 +17,11 @@ export const userActivatorApi = {
     return response.data;
   },
 
-  //   activate: async (userId)
+  activate: async (userId: GetUserActivator['id']) => {
+    const response = await httpClient.post<null>(
+      API_ROUTES.ROOT_USER_ACTIVATOR_USER_ID_ACTIVATE_USER.generatePath({ userId })
+    );
+
+    return response.data;
+  },
 };

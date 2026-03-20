@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Eye, Pencil, Trash2 } from 'lucide-react';
+import { Check, Eye, Pencil, Trash2 } from 'lucide-react';
 
 import { Button, Tooltip, TooltipContent, TooltipPositioner, TooltipTrigger } from '@/shared/components/ui';
 import { useAlertDialog } from '@/providers/alert-dialog-provider';
@@ -41,6 +41,18 @@ export const TableActions = <T,>({ row, ...actions }: TableActionsPopoverProps<T
       ],
     });
 
+  const handleButtonAccept = () =>
+    openAlertDialog({
+      variant: 'warning',
+      title: 'Принять',
+      desctition: 'Это действие невозможно отменить. Подтвердите принятие !',
+      buttons: [
+        <Button onClick={rowActions.onAccept} variant={'default'}>
+          Принять
+        </Button>,
+      ],
+    });
+
   const ACTIONS_SCHEMA = [
     { action: rowActions.onView, icon: <Eye />, description: 'Просмотр' },
     { action: rowActions.onEdit, icon: <Pencil />, description: 'Редактирование' },
@@ -48,6 +60,11 @@ export const TableActions = <T,>({ row, ...actions }: TableActionsPopoverProps<T
       action: rowActions.onDelete ? handleButtonDelete : undefined,
       icon: <Trash2 className='text-destructive' />,
       description: 'Удаление',
+    },
+    {
+      action: rowActions.onAccept ? handleButtonAccept : undefined,
+      icon: <Check className='text-green-400' />,
+      description: 'Принять',
     },
   ].filter((item) => item.action !== undefined);
 

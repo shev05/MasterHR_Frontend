@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import { requiredString, VAL_MESSAGES } from '@/shared/lib';
 
 export enum LOGIN_FIELDS {
-  LOGIN = 'login',
+  LOGIN = 'email',
   PASSWORD = 'password',
 }
 

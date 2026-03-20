@@ -27,6 +27,7 @@ export const VAL_REGEXP = {
 export const VAL_MESSAGES = {
   AUTH: {
     CREDINTIALS: 'Введите верные логин и пароль!',
+    EMAIL: 'Почта введена не верно',
     PASSWORD_MISMATCH: 'Введенные пароли не совпадают!',
     PASSWORD_REQUIREMENTS:
       'Пароль должен иметь длину минимум 10 символов, содержать заглавные и прописные латинские буквы, цифры и спецсимвол.',

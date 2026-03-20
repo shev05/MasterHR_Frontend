@@ -1,11 +1,16 @@
-import type { GetType, WithId } from '@/shared/interface';
+import type { ApiResponse, GetType } from '@/shared/interface';
 
 export type BaseUser = {
-  email: string;
-  first_name: string;
-  last_name: string;
+  name: string;
+  surname: string;
   patronymic: string;
-  role_id: string;
+  email: string;
+  phoneNumber: string;
+  position: string;
+  role: number;
+  avatar: string;
 };
 
-export type GetUser = GetType<WithId<BaseUser>>;
+export type GetUser = GetType<BaseUser>;
+
+export type GetResponseUser = ApiResponse<GetUser>;

@@ -46,7 +46,7 @@ export const LoginForm: FC = () => {
           label='Логин'
           required
           autoCorrect='off'
-          autoComplete='login'
+          autoComplete='email'
           autoCapitalize='none'
         />
         <FormPasswordInput

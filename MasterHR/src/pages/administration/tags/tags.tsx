@@ -34,8 +34,8 @@ export function TagsPage() {
     });
   };
 
-  const handleTagsDelete = (labOrder: GetTags) => {
-    deleteTag(labOrder?.id, {
+  const handleTagsDelete = (tags: GetTags) => {
+    deleteTag(tags?.id, {
       onSuccess: (response) => toast.success(response.message),
       onError: (error) => parseApiErrors({ error }),
     });
@@ -46,7 +46,7 @@ export function TagsPage() {
         icon={ROUTES_META.ROOT_ADMINISTRATION_TAGS.icon}
         title={ROUTES_META.ROOT_ADMINISTRATION_TAGS.label}
       >
-        <AddButton onClick={() => handleTagsMutate()}>Создать пациента</AddButton>
+        <AddButton onClick={() => handleTagsMutate()}>Создать тег</AddButton>
       </AppPageHeader>
       <ErrorBoundary fallback={<ErrorBoundaryFallback text={PLACEHOLDERS.filtersError} />}>
         <SearchFilters

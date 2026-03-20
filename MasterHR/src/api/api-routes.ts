@@ -12,6 +12,14 @@ export const API_ROUTES = asTransformedRoutes({
           },
         },
       },
+      USER: {
+        path: 'User',
+        children: {
+          ME: {
+            path: 'me',
+          },
+        },
+      },
       TAGS: {
         path: 'Tags',
         children: {
@@ -22,6 +30,16 @@ export const API_ROUTES = asTransformedRoutes({
       },
       USER_ACTIVATOR: {
         path: 'UserActivator',
+        children: {
+          USER_ID: {
+            path: ':userId',
+            children: {
+              ACTIVATE_USER: {
+                path: 'activate-user',
+              },
+            },
+          },
+        },
       },
     },
   },

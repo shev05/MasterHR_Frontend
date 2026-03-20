@@ -25,3 +25,6 @@ export * from './alert-dialog';
 export * from './dialog';
 export * from './badge';
 export * from './input-group';
+export * from './avatar';
+export * from './dropdown-menu';
+export * from './tabs';

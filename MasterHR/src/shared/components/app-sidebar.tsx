@@ -18,14 +18,17 @@ import {
   buttonVariants,
 } from './ui';
 import { filterAllowedItems } from './app-sidebar.lib';
+import { NavUser } from './nav-user';
 
 import type { ComponentProps } from 'react';
 import type { GetPermission } from '@/api/endpoints/permission';
+import type { NavUserProps } from './nav-user';
 
-type AppSidebarProps = ComponentProps<typeof Sidebar> & {
-  userPermissions: Array<GetPermission['name']>;
-};
-export function AppSidebar({ userPermissions, ...props }: AppSidebarProps) {
+type AppSidebarProps = ComponentProps<typeof Sidebar> &
+  NavUserProps & {
+    userPermissions: Array<GetPermission['name']>;
+  };
+export function AppSidebar({ user, userPermissions, ...props }: AppSidebarProps) {
   const isMobile = useIsMobile();
 
   const { state } = useSidebar();
@@ -48,6 +51,9 @@ export function AppSidebar({ userPermissions, ...props }: AppSidebarProps) {
         <NavMenu items={ALLOWED_ITEMS} />
       </SidebarContent>
       <SidebarFooter className='border-t'>
+        <SuspenseWrapper condition={!!user}>
+          <NavUser user={user} />
+        </SuspenseWrapper>
         <SuspenseWrapper condition={!isMobile}>
           <SidebarMenuButton render={<SidebarTrigger className={cn(buttonVariants({ variant: 'outline' }))} />} />
         </SuspenseWrapper>
