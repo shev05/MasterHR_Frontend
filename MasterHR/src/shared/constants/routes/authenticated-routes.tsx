@@ -12,6 +12,7 @@ const { AuthenticatedLayout } = lazyImport(() => import('@/pages/authenticated-l
 const { HomePage } = lazyImport(() => import('@/pages/home'), 'HomePage');
 
 const { TagsPage } = lazyImport(() => import('@/pages/administration/tags'), 'TagsPage');
+const { UserActivatorPage } = lazyImport(() => import('@/pages/administration/user-activator'), 'UserActivatorPage');
 
 const { ComponentsPage } = lazyImport(() => import('@/pages/components'), 'ComponentsPage');
 
@@ -55,6 +56,11 @@ export const AUTHENTICATED_ROUTES: AppRouteObject = {
           path: ROUTES_META.ROOT_ADMINISTRATION_TAGS.path,
           handle: getMetaByKey(ROUTES_META.ROOT_ADMINISTRATION_TAGS),
           element: <TagsPage />,
+        },
+        {
+          path: ROUTES_META.ROOT_ADMINISTRATION_USER_ACTIVATOR.path,
+          handle: getMetaByKey(ROUTES_META.ROOT_ADMINISTRATION_USER_ACTIVATOR),
+          element: <UserActivatorPage />,
         },
       ],
     },

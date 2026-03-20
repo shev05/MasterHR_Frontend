@@ -80,13 +80,13 @@ export const TagsMutateDialog: FC<TagsMutateDialogProps> = ({ tagId, closeDialog
           <FormProvider {...form}>
             <form noValidate onSubmit={handleFormSubmit} className='flex flex-col justify-between overflow-hidden'>
               <DialogHeader>
-                <DialogTitle>{`${getDialogTitle({ isEditMode: isEdit, isViewMode })} направления`}</DialogTitle>
+                <DialogTitle>{`${getDialogTitle({ isEditMode: isEdit, isViewMode })} тега`}</DialogTitle>
                 <SuspenseWrapper condition={!isViewMode}>
                   <DialogDescription>{PLACEHOLDERS.dialog}</DialogDescription>
                 </SuspenseWrapper>
               </DialogHeader>
               <DialogBody className={'pb-4'}>
-                <FormInput name={TAGS_FIELDS.TITLE} label='Имя' required />
+                <FormInput name={TAGS_FIELDS.TITLE} label='Название' required />
               </DialogBody>
               <DialogFooter className='relative'>
                 <DialogButtonGroup disabled={createIsPending} handleClose={handleDialogClose} />

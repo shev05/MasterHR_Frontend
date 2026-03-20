@@ -8,16 +8,19 @@ import { ModeToggle } from '@/shared/components/mode-toggle';
 import { ErrorBoundary } from '@/shared/components/error-boundary';
 import { ErrorBoundaryFallback } from '@/shared/components/error-boundary-fallback';
 import { PLACEHOLDERS } from '@/shared/constants/placeholders';
+import { UseMe } from '@/api/endpoints/user';
 
 import type { FC } from 'react';
 
 export const AuthenticatedLayout: FC = () => {
   const isMobile = useIsMobile();
 
+  const { data: currentUser } = UseMe();
+
   return (
     <SidebarProvider>
       <ErrorBoundary fallback={<ErrorBoundaryFallback text={PLACEHOLDERS.sidebarError} />}>
-        <AppSidebar userPermissions={[]} />
+        <AppSidebar userPermissions={[]} user={currentUser} />
       </ErrorBoundary>
       <main className='flex h-screen w-full flex-col justify-between gap-2 overflow-hidden p-1 px-2'>
         <ErrorBoundary fallback={<ErrorBoundaryFallback text={PLACEHOLDERS.headerError} />}>

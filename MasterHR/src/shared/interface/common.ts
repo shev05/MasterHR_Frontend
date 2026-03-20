@@ -29,6 +29,7 @@ export type BaseGetColumnsProps<T = undefined> = Partial<{
   onView: (row: T) => void;
   onEdit: (row: T) => void;
   onDelete: (row: T) => void;
+  onAccept: (row: T) => void;
 }>;
 
 export type QueriesSchemaToType<T> = Partial<{

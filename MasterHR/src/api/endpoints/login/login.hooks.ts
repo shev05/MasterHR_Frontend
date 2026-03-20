@@ -13,3 +13,10 @@ export const useLogin = () => {
     mutationFn: loginApi.login,
   });
 };
+
+export const useRegister = () => {
+  return useMutation({
+    mutationKey: loginKeys.base,
+    mutationFn: loginApi.register,
+  });
+};
