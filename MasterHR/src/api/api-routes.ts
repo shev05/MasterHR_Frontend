@@ -10,11 +10,22 @@ export const API_ROUTES = asTransformedRoutes({
           LOGIN: {
             path: 'login',
           },
+          REFRESH_TOKEN: {
+            path: 'refresh-token',
+          },
         },
       },
       USER: {
         path: 'User',
         children: {
+          USERID: {
+            path: ':userId',
+            children: {
+              PROFILE: {
+                path: 'profile',
+              },
+            },
+          },
           ME: {
             path: 'me',
           },
@@ -25,6 +36,31 @@ export const API_ROUTES = asTransformedRoutes({
         children: {
           TAG_ID: {
             path: ':tagId',
+          },
+        },
+      },
+      PROJECT: {
+        path: 'Project',
+        children: {
+          PROJECT_ID: {
+            path: ':projectId',
+            children: {
+              USERS: {
+                path: 'users',
+              },
+              TAGS: {
+                path: 'tags',
+              },
+              INFO: {
+                path: 'info',
+              },
+              EMPLOYEES: {
+                path: 'empoyees',
+              },
+              MANAGER: {
+                path: 'manager',
+              },
+            },
           },
         },
       },

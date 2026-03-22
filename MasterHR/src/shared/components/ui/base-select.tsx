@@ -12,6 +12,10 @@ function SelectGroup({ ...props }: SelectPrimitive.Group.Props) {
   return <SelectPrimitive.Group data-slot='select-group' {...props} />;
 }
 
+export type SelectValueProps = React.ComponentProps<typeof SelectPrimitive.Value> & {
+  placeholder?: string;
+};
+
 function SelectValue({
   placeholder,
   ...props

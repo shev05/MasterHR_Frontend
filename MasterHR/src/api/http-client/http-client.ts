@@ -6,10 +6,11 @@ import { API_ROUTES } from '@/api/api-routes';
 import { ROUTES_META } from '@/shared/constants/routes/router-meta';
 import { removeIsAuth } from '@/store';
 
-// import { observerApi } from './interceptors.lib';
+import { observerApi } from './interceptors.lib';
 import { parseApiErrors } from './error-parser';
 
 const LOGIN_PAGE_ROUTE = ROUTES_META.ROOT_LOGIN.absPath;
+const API_REFRESH_TOKEN_PATH = API_ROUTES.ROOT_ACCOUNT_REFRESH_TOKEN.absPath;
 
 export const ERROR_QUERY = 'code';
 
@@ -40,33 +41,28 @@ httpClient.interceptors.response.use(
       !originalRequest._isRetry &&
       originalRequest.url !== API_ROUTES.ROOT_ACCOUNT_LOGIN.absPath
     ) {
-      logout();
-      // // if (originalRequest.url?.includes(API_REFRESH_TOKEN_PATH)) {
-      // //   logout();
-      // //   return Promise.reject(error);
-      // // }
+      if (originalRequest.url?.includes(API_REFRESH_TOKEN_PATH)) {
+        logout();
+        return Promise.reject(error);
+      }
 
-      // if (!observerApi.isRefreshing) {
-      //   observerApi.isRefreshing = true;
-      //   originalRequest._isRetry = true;
+      if (!observerApi.isRefreshing) {
+        originalRequest._isRetry = true;
 
-      //   try {
-      //     // await httpClient.post(API_REFRESH_TOKEN_PATH, {}, { withCredentials: true });
-      //     observerApi.notifyRefreshed();
-      //     return httpClient(originalRequest);
-      //   } catch {
-      //     logout();
-      //   } finally {
-      //     observerApi.isRefreshing = false;
-      //   }
-      // } else {
-      //   return new Promise((resolve, reject) => {
-      //     observerApi.subscribeToRefresh(() => {
-      //       originalRequest._retry = true;
-      //       httpClient(originalRequest).then(resolve).catch(reject);
-      //     });
-      //   });
-      // }
+        try {
+          await httpClient.post(API_REFRESH_TOKEN_PATH, {}, { withCredentials: true });
+          return httpClient(originalRequest);
+        } catch {
+          logout();
+        }
+      } else {
+        return new Promise((resolve, reject) => {
+          observerApi.subscribeToRefresh(() => {
+            originalRequest._retry = true;
+            httpClient(originalRequest).then(resolve).catch(reject);
+          });
+        });
+      }
     } else {
       parseApiErrors({ error, isToastNeeded: true });
       return Promise.reject(error);

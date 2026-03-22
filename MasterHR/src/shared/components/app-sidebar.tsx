@@ -19,6 +19,7 @@ import {
 } from './ui';
 import { filterAllowedItems } from './app-sidebar.lib';
 import { NavUser } from './nav-user';
+import { ModeToggle } from './mode-toggle';
 
 import type { ComponentProps } from 'react';
 import type { GetPermission } from '@/api/endpoints/permission';
@@ -51,6 +52,9 @@ export function AppSidebar({ user, userPermissions, ...props }: AppSidebarProps)
         <NavMenu items={ALLOWED_ITEMS} />
       </SidebarContent>
       <SidebarFooter className='border-t'>
+        <div className='flex justify-center'>
+          <ModeToggle />
+        </div>
         <SuspenseWrapper condition={!!user}>
           <NavUser user={user} />
         </SuspenseWrapper>

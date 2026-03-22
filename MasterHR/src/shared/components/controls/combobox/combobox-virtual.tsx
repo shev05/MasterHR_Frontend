@@ -71,7 +71,7 @@ export const ComboboxVirtual: FC<ComboboxVirtualProps> = ({
 
   useEffect(() => {
     if (value !== undefined) {
-      const selectedOption = options.find((option) => option.value === value);
+      const selectedOption = options.find((option) => option.value === value?.toString());
       if (selectedOption) {
         setInputValue(selectedOption.label);
       }
@@ -98,7 +98,8 @@ export const ComboboxVirtual: FC<ComboboxVirtualProps> = ({
         value={value}
         {...props}
         onValueChange={(value, e) => {
-          const selectedOption = options.find((option) => option.value === value);
+          if (value == null) return;
+          const selectedOption = options.find((option) => option.value === value?.toString());
           setInputValue(selectedOption?.label || '');
           props.onValueChange?.(value, e);
         }}

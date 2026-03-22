@@ -1,4 +1,11 @@
-import type { ApiResponse, GetType } from '@/shared/interface';
+import type { ApiPaginatedResponse, ApiResponse, GetQueries, GetType, QueriesSchemaToType } from '@/shared/interface';
+
+export const USER_SCHEMA_QUERIES = {
+  search: 'string',
+} as const;
+
+export type BaseUserQueries = QueriesSchemaToType<typeof USER_SCHEMA_QUERIES>;
+export type UserQueries = GetQueries<BaseUserQueries>;
 
 export type BaseUser = {
   name: string;
@@ -13,4 +20,5 @@ export type BaseUser = {
 
 export type GetUser = GetType<BaseUser>;
 
-export type GetResponseUser = ApiResponse<GetUser>;
+export type GetUserResponse = ApiResponse<GetUser>;
+export type GetUserPaginatedResponse = ApiPaginatedResponse<GetUser>;

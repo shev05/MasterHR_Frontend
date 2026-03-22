@@ -1,13 +1,41 @@
-import { format } from 'date-fns';
+import { format, formatISO, parse } from 'date-fns';
 
-export const DATE_FORMATS = {
-  short: 'dd.MM.yyyy',
-  time: 'HH:mm',
-  api: "yyyy-MM-dd'T'HH:mm:ssXXX",
-} as const;
+import type { FormatOptions } from 'date-fns';
 
-export const sFormat = (...args: Parameters<typeof format>): ReturnType<typeof format> => {
-  return format(...args);
+export enum DATE_FORMATS {
+  short_dotted = 'dd.MM.yyyy',
+  short_dashed = 'yyyy-MM-dd',
+  time = 'HH:mm',
+  short_dotted_with_time = `${short_dotted} ${time}`,
+}
+
+export const TIME_VALUES = Array.from({ length: 96 }).map((_, i) => {
+  const hour = String(Math.floor(i / 4)).padStart(2, '0');
+  const minute = String((i % 4) * 15).padStart(2, '0');
+  return `${hour}:${minute}`;
+});
+
+export const sFormat = (
+  date: string | number | Date,
+  formatStr: Undefinable<string> = DATE_FORMATS.short_dotted,
+  options?: Undefinable<FormatOptions>
+): ReturnType<typeof format> => {
+  if (!date) return 'Некорректная дата';
+  return format(date, formatStr, options);
+};
+
+export const formatDate = (date: Date | null | undefined): string | undefined => {
+  // console.log('ISO-DATE-FNS', date && formatISO(date));
+  // console.log('ISO-JS', date && date.toISOString());
+  return date ? formatISO(date) : undefined;
+};
+
+export const parseDate = (dateString: string | null | undefined): Date | undefined => {
+  return dateString ? new Date(dateString) : undefined;
+};
+
+export const parseDateFromInput = (dateString: string): Date | null => {
+  return parse(dateString, DATE_FORMATS.short_dotted, new Date());
 };
 
 export const DEFAULT_TIME_SLOTS = [

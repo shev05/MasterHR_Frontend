@@ -3,8 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { SidebarProvider } from '@/providers';
 import { useIsMobile } from '@/shared/hooks';
 import { AppSidebar } from '@/shared/components/app-sidebar';
-import { Separator, SidebarTrigger, SuspenseWrapper } from '@/shared/components/ui';
-import { ModeToggle } from '@/shared/components/mode-toggle';
+import { SidebarTrigger, SuspenseWrapper } from '@/shared/components/ui';
 import { ErrorBoundary } from '@/shared/components/error-boundary';
 import { ErrorBoundaryFallback } from '@/shared/components/error-boundary-fallback';
 import { PLACEHOLDERS } from '@/shared/constants/placeholders';
@@ -29,12 +28,10 @@ export const AuthenticatedLayout: FC = () => {
               <SuspenseWrapper condition={isMobile}>
                 <SidebarTrigger />
               </SuspenseWrapper>
-              <ModeToggle />
             </div>
-            <Separator />
           </header>
         </ErrorBoundary>
-        <section className='relative flex h-full flex-col justify-between gap-2 overflow-hidden'>
+        <section className='relative flex h-full flex-col gap-2 overflow-hidden'>
           <Outlet />
         </section>
       </main>

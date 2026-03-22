@@ -14,8 +14,8 @@ export type GetQueries<T = undefined> = T & BaseQueries;
 
 export type DBFields = {
   id: string;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type GetType<T> = T & DBFields;

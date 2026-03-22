@@ -1,4 +1,4 @@
-import { Check, Component, House, ShieldUser, Tag } from 'lucide-react';
+import { Check, Component, Folder, House, ShieldUser, Tag, User, Users2 } from 'lucide-react';
 
 import { asTransformedRoutes } from '@/shared/builders';
 
@@ -23,8 +23,38 @@ export const ROUTES_META = asTransformedRoutes({
         label: 'Администрирование',
         icon: ShieldUser,
         children: {
+          USERS: {
+            path: 'users',
+            label: 'Пользователи',
+            icon: Users2,
+            dataId: 'users',
+            children: {
+              USER_ID: {
+                path: ':userId',
+                label: 'Пользователь',
+                icon: User,
+              },
+            },
+          },
+          PROJECT: {
+            path: 'project',
+            label: 'Проекты',
+            icon: Folder,
+            children: {
+              PROJECT_ID: {
+                path: ':projectId',
+                label: 'Проект',
+                icon: Folder,
+              },
+            },
+          },
           TAGS: { path: 'tags', label: 'Теги', icon: Tag },
-          USER_ACTIVATOR: { path: 'user-activator', label: 'Активация пользователей', icon: Check },
+          USER_ACTIVATOR: {
+            path: 'user-activator',
+            label: 'Активация пользователей',
+            icon: Check,
+            dataId: 'users-activator',
+          },
         },
       },
       COMPONENTS: { path: '/components', label: 'Компоненты', icon: Component },

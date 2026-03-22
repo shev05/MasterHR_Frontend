@@ -10,3 +10,4 @@ export * from './date-range-picker';
 export * from './date-time-picker';
 export * from './date-time-range-picker';
 export * from './switch';
+export * from './multiple-select';

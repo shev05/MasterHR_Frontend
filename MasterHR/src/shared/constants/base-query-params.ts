@@ -15,5 +15,5 @@ export const DEFAULT_QUERIES = {
 };
 
 export const ALL_ELEMENTS_QUERY = {
-  pageSize: -1,
+  pageNumber: -1,
 };
