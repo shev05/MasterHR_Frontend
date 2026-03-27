@@ -1,4 +1,4 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 
 import { API_ROUTES } from '@/api/api-routes';
 import { getApiBaseKeys } from '@/shared/lib';
@@ -54,5 +54,11 @@ export const UseMe = () => {
     queryKey: userKeys.base,
     queryFn: ({ signal }) => userApi.me(signal),
     placeholderData: keepPreviousData,
+  });
+};
+
+export const UseExtractSkills = () => {
+  return useMutation({
+    mutationFn: userApi.resumeFile,
   });
 };

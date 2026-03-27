@@ -1,7 +1,8 @@
+import { useRef } from 'react';
 import { ArrowLeft, Briefcase, Mail, Phone } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { useUser } from '@/api/endpoints/user';
+import { UseExtractSkills, useUser } from '@/api/endpoints/user';
 import { AppPageHeader } from '@/shared/components/app-page-header';
 import {
   Avatar,
@@ -20,6 +21,29 @@ import type { GetUser } from '@/api/endpoints/user';
 export function UserDetailPage() {
   const { userId } = useParams<{ userId: GetUser['id'] }>();
   const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { mutate, isPending } = UseExtractSkills();
+
+  const handleFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const formData = new FormData();
+      formData.append('resumeFile', file);
+
+      mutate(formData);
+
+      console.debug(mutate);
+    } catch (error) {
+      console.error('Error extracting skills:', error);
+    }
+  };
+
+  const handleButtonClick = () => {
+    fileInputRef.current?.click();
+  };
 
   const { data: user, isPending: userIsPending } = useUser({ userId: userId || '' });
   return (
@@ -76,6 +100,12 @@ export function UserDetailPage() {
                 </div>
               </div>
             </div>
+          </CardContent>
+          <CardContent>
+            <input type='file' ref={fileInputRef} onChange={handleFile} accept='.pdf,.doc,.docx' className='hidden' />
+            <Button onClick={handleButtonClick} disabled={isPending}>
+              {isPending ? 'Загрузка...' : 'Загрузить резюме'}
+            </Button>
           </CardContent>
         </Card>
       </SuspenseWrapper>

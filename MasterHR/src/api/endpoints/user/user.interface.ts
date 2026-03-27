@@ -20,5 +20,10 @@ export type BaseUser = {
 
 export type GetUser = GetType<BaseUser>;
 
+export type GetExtractSkills = {
+  skills: Array<{ name: string; level: string; years: number }>;
+  total_found: number
+};
+
 export type GetUserResponse = ApiResponse<GetUser>;
 export type GetUserPaginatedResponse = ApiPaginatedResponse<GetUser>;

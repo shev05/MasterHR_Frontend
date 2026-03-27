@@ -29,6 +29,9 @@ export const API_ROUTES = asTransformedRoutes({
           ME: {
             path: 'me',
           },
+          EXTRACT_SKILLS: {
+            path: 'extract-skills',
+          },
         },
       },
       TAGS: {

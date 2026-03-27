@@ -1,7 +1,7 @@
 import { httpClient } from '@/api/http-client';
 import { API_ROUTES } from '@/api/api-routes';
 
-import type { GetUser, GetUserPaginatedResponse, UserQueries } from './user.interface';
+import type { GetExtractSkills, GetUser, GetUserPaginatedResponse, UserQueries } from './user.interface';
 
 export const userApi = {
   getList: async ({ ...queries }: UserQueries, signal: AbortSignal) => {
@@ -26,6 +26,15 @@ export const userApi = {
       signal,
     });
 
+    return response.data;
+  },
+
+  resumeFile: async (formData: FormData) => {
+    const response = await httpClient.post<GetExtractSkills>(API_ROUTES.ROOT_USER_EXTRACT_SKILLS.absPath, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return response.data;
   },
 };
