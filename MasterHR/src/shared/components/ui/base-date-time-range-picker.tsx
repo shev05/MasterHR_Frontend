@@ -33,7 +33,7 @@ export function BaseDateTimeRangePicker({
     const fromDate = internalValue.from;
     const toDate = internalValue.to;
 
-    const fromString = sFormat(fromDate, DATE_FORMATS.short);
+    const fromString = sFormat(fromDate, DATE_FORMATS.short_dotted);
     const fromTime = `${fromDate.getHours().toString().padStart(2, '0')}:${fromDate.getMinutes().toString().padStart(2, '0')}`;
     const fromDateTime = `${fromString} ${fromTime}`;
 
@@ -41,7 +41,7 @@ export function BaseDateTimeRangePicker({
       return fromDateTime;
     }
 
-    const toString = sFormat(toDate, DATE_FORMATS.short);
+    const toString = sFormat(toDate, DATE_FORMATS.short_dotted);
     const toTime = `${toDate.getHours().toString().padStart(2, '0')}:${toDate.getMinutes().toString().padStart(2, '0')}`;
     const toDateTime = `${toString} ${toTime}`;
 

@@ -15,6 +15,7 @@ export type BaseProject = {
   createdBy: GetUser;
   tags: Array<GetTags>;
   users: Array<Omit<GetUser, 'role'> & { projectRole: number }>;
+  canEdit: boolean;
 };
 
 export type GetProject = GetType<BaseProject>;

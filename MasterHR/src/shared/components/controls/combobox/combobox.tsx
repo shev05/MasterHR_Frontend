@@ -65,7 +65,7 @@ export const Combobox: FC<ComboboxProps> = ({
         id={comboboxId}
         {...props}
         onValueChange={(value, e) => {
-          setInputValue(options.find((option) => option.value === value)?.label || '');
+          setInputValue(options.find((option) => option.value === value?.toString())?.label || '');
           props.onValueChange?.(value, e);
         }}
       >

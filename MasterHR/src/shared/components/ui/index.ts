@@ -28,3 +28,5 @@ export * from './input-group';
 export * from './avatar';
 export * from './dropdown-menu';
 export * from './tabs';
+export * from './drawer';
+export * from './scroll-area';
