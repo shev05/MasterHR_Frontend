@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 
 import { queryClient } from '@/api/query-client';
 
-import type { GetUser } from '@/api/endpoints';
+import type { GetUser } from '@/api/endpoints/user';
 
 interface UserState {
   user: GetUser | null;

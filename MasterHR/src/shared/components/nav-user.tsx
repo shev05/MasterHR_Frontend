@@ -1,9 +1,10 @@
-import { ChevronsUpDown, LogOut } from 'lucide-react';
+import { Bell, ChevronsUpDown, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import {
   Avatar,
   AvatarFallback,
+  Badge,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -19,6 +20,9 @@ import {
 } from '@/shared/components/ui';
 import { ROUTES_META } from '@/shared/constants/routes/router-meta';
 import { removeIsAuth } from '@/store';
+import { useNotifications } from '@/shared/hooks/use-notification';
+
+import { NotificationBell } from './notification';
 
 import type { FC } from 'react';
 import type { GetUser } from '@/api/endpoints/user';
@@ -60,6 +64,8 @@ export type NavUserProps = {
 export const NavUser: FC<NavUserProps> = ({ user }) => {
   const navigate = useNavigate();
 
+  const { unreadCount, setIsDrawerOpen } = useNotifications();
+
   const { isMobile } = useSidebar();
 
   const handleLogout = () => {
@@ -86,6 +92,14 @@ export const NavUser: FC<NavUserProps> = ({ user }) => {
                   email={user.email}
                   position={user.position}
                 />
+                {unreadCount > 0 && (
+                  <Badge
+                    variant='destructive'
+                    className='absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center p-0 text-xs'
+                  >
+                    {unreadCount ? <Bell className='h-3 w-3' /> : unreadCount}
+                  </Badge>
+                )}
                 <ChevronsUpDown className='ml-auto size-4' />
               </SidebarMenuButton>
             }
@@ -105,6 +119,14 @@ export const NavUser: FC<NavUserProps> = ({ user }) => {
                       position={user.position}
                     />
                   </div>
+                  {unreadCount > 0 && (
+                    <div className='flex items-center gap-3'>
+                      <div className='relative'>
+                        <NotificationBell unreadCount={unreadCount} onClick={() => setIsDrawerOpen(true)} />
+                      </div>
+                      <span className='font-semibold'>Уведомления</span>
+                    </div>
+                  )}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
