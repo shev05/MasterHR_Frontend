@@ -22,7 +22,15 @@ export type GetUser = GetType<BaseUser>;
 
 export type GetExtractSkills = {
   skills: Array<{ name: string; level: string; years: number }>;
-  total_found: number
+  total_found: number;
+};
+
+export type PutUser = {
+  name: string;
+  surname: string;
+  patronymic: string;
+  position: string;
+  phoneNumber: string;
 };
 
 export type GetUserResponse = ApiResponse<GetUser>;

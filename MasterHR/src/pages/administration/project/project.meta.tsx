@@ -9,7 +9,7 @@ const columnHelper = createColumnHelper<GetProject>();
 
 type GetColumnsProps = BaseGetColumnsProps<GetProject>;
 
-export const getColumns = ({ onView }: GetColumnsProps) => [
+export const getColumns = ({ onView, onDelete }: GetColumnsProps) => [
   columnHelper.accessor('title', {
     id: 'title',
     cell: ({ row }) => <span>{row.original?.title}</span>,
@@ -40,6 +40,6 @@ export const getColumns = ({ onView }: GetColumnsProps) => [
   }),
   columnHelper.display({
     ...BASE_ACTION_CELL_CONFIG,
-    cell: ({ row }) => <TableActions row={row.original} onView={onView} />,
+    cell: ({ row }) => <TableActions row={row.original} onView={onView} onDelete={onDelete} />,
   }),
 ];
