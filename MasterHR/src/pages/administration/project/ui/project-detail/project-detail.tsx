@@ -60,6 +60,8 @@ export function ProjectDetailPage() {
     });
   };
 
+  const canEdit = project?.canEdit;
+
   return (
     <>
       <AppPageHeader className='mb-2'>
@@ -79,9 +81,11 @@ export function ProjectDetailPage() {
                     <CardDescription className='text-base leading-relaxed'>{project?.description}</CardDescription>
                   )}
                 </div>
-                <Button variant='outline' size='sm' className='ml-2 h-8 w-8 p-0' onClick={handleProjectInfoMutate}>
-                  <Pencil className='h-4 w-4' />
-                </Button>
+                {canEdit && (
+                  <Button variant='outline' size='sm' className='ml-2 h-8 w-8 p-0' onClick={handleProjectInfoMutate}>
+                    <Pencil className='h-4 w-4' />
+                  </Button>
+                )}
               </div>
             </CardHeader>
             <CardContent className='pt-0'>
@@ -99,9 +103,11 @@ export function ProjectDetailPage() {
                     <p className='text-muted-foreground text-sm italic'>Нет тегов</p>
                   )}
                 </div>
-                <Button variant='outline' size='sm' className='ml-2 h-8 w-8 p-0' onClick={handleProjectTagsMutate}>
-                  <Pencil className='h-4 w-4' />
-                </Button>
+                {canEdit && (
+                  <Button variant='outline' size='sm' className='ml-2 h-8 w-8 p-0' onClick={handleProjectTagsMutate}>
+                    <Pencil className='h-4 w-4' />
+                  </Button>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -113,9 +119,11 @@ export function ProjectDetailPage() {
                   <Users className='h-5 w-5' />
                   Участники проекта
                 </CardTitle>
-                <Button variant='outline' size='sm' className='ml-2 h-8 w-8 p-0' onClick={handleProjectUsersMutate}>
-                  <Pencil className='h-4 w-4' />
-                </Button>
+                {canEdit && (
+                  <Button variant='outline' size='sm' className='ml-2 h-8 w-8 p-0' onClick={handleProjectUsersMutate}>
+                    <Pencil className='h-4 w-4' />
+                  </Button>
+                )}
               </div>
               <CardDescription className='mt-1 text-sm'>
                 {project?.users?.length || 0} участников в проекте

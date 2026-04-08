@@ -88,4 +88,10 @@ export const projectApi = {
 
     return response.data;
   },
+
+  delete: async (projectId: GetProject['id']) => {
+    const response = await httpClient.delete<void>(API_ROUTES.ROOT_PROJECT_PROJECT_ID.generatePath({ projectId }));
+
+    return response.data;
+  },
 };

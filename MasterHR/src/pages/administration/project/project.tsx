@@ -8,9 +8,11 @@ import { BASE_SCHEMA_QUERIES, DEFAULT_QUERIES } from '@/shared/constants';
 import { PLACEHOLDERS } from '@/shared/constants/placeholders';
 import { ROUTES_META } from '@/shared/constants/routes/router-meta';
 import { useQueryParams } from '@/shared/hooks/use-query-params';
-import { PROJECT_SCHEMA_QUERIES, useProjectList } from '@/api/endpoints/project';
+import { PROJECT_SCHEMA_QUERIES, useProjectDelete, useProjectList } from '@/api/endpoints/project';
 import { AddButton } from '@/shared/components/ui';
 import { useDialog } from '@/providers';
+import { toast } from '@/shared/components/app-toaster';
+import { parseApiErrors } from '@/api/http-client';
 
 import { getColumns } from './project.meta';
 import { ProjectCreateDialog } from './ui/project-create-dialog';
@@ -26,6 +28,7 @@ export function ProjectPage() {
   });
 
   const { data: projectList, isPending: projectListIsPending } = useProjectList({ queries: controlledParams });
+  const { mutate: deleteProject, isPending: deleteIsPending } = useProjectDelete();
 
   const handleViewProjectPage = (project?: GetProject) => {
     if (!project?.id) return;
@@ -37,6 +40,13 @@ export function ProjectPage() {
   const handleProjectCreate = () => {
     showDialog({
       getContent: (onClose) => <ProjectCreateDialog closeDialog={onClose} />,
+    });
+  };
+
+  const handleProjectDelete = (project: GetProject) => {
+    deleteProject(project?.id, {
+      onSuccess: () => toast.success('Проект удален'),
+      onError: (error) => parseApiErrors({ error }),
     });
   };
 
@@ -52,8 +62,8 @@ export function ProjectPage() {
         <AppTable
           data={projectList?.list}
           meta={projectList?.meta}
-          isDataFetching={projectListIsPending}
-          columns={getColumns({ onView: handleViewProjectPage })}
+          isDataFetching={projectListIsPending || deleteIsPending}
+          columns={getColumns({ onView: handleViewProjectPage, onDelete: handleProjectDelete })}
           onPaginationParamsChange={(params) => updateParams(params, { withPaginationReset: false })}
           onSortingParamsChange={(params) => updateParams(params, { withPaginationReset: false })}
         />

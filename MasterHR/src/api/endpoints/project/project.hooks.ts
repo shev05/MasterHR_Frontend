@@ -112,3 +112,12 @@ export const useProjectInfoMutate = () => {
     },
   });
 };
+
+export const useProjectDelete = () => {
+  return useMutation({
+    mutationFn: projectApi.delete,
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: projectKeys.base });
+    },
+  });
+};

@@ -3,6 +3,7 @@ import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import { API_ROUTES } from '@/api/api-routes';
 import { getApiBaseKeys } from '@/shared/lib';
 import { transformDataToOptions } from '@/shared/lib/transform-data-to-options';
+import { queryClient } from '@/api/query-client';
 
 import { userApi } from './user.api';
 
@@ -60,5 +61,14 @@ export const UseMe = () => {
 export const UseExtractSkills = () => {
   return useMutation({
     mutationFn: userApi.resumeFile,
+  });
+};
+
+export const useUserUpdate = () => {
+  return useMutation({
+    mutationFn: userApi.update,
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: userKeys.base });
+    },
   });
 };

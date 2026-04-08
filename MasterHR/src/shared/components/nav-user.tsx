@@ -74,6 +74,10 @@ export const NavUser: FC<NavUserProps> = ({ user }) => {
   };
   if (!user) return null;
 
+  const handleViewUserPage = () => {
+    navigate(ROUTES_META.ROOT_ADMINISTRATION_USERS_USER_ID.generatePath({ userId: user.id }));
+  };
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -109,7 +113,11 @@ export const NavUser: FC<NavUserProps> = ({ user }) => {
             <DropdownMenuContent className='max-w-(--anchor-width) z-60 min-w-56 rounded-lg'>
               <DropdownMenuGroup>
                 <DropdownMenuLabel className='p-0 font-normal'>
-                  <div className='flex items-center gap-2 px-1 py-1.5 text-left text-sm'>
+                  <div
+                    className='flex cursor-pointer items-center gap-2 px-1 py-1.5 text-left text-sm transition-all duration-200 hover:rounded-md hover:bg-gray-800'
+                    onClick={handleViewUserPage}
+                    title='Перейти на страницу пользователя'
+                  >
                     <UserAvatar name={user.name} surname={user.surname} patronymic={user.patronymic} />
                     <UserInfo
                       name={user.name}

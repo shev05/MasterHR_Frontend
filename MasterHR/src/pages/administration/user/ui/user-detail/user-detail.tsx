@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { ArrowLeft, Briefcase, Mail, Phone } from 'lucide-react';
+import { ArrowLeft, Briefcase, Mail, Pencil, Phone } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { UseExtractSkills, useUser } from '@/api/endpoints/user';
@@ -15,6 +15,9 @@ import {
 } from '@/shared/components/ui';
 import { ROUTES_META } from '@/shared/constants/routes/router-meta';
 import { roleUser } from '@/shared/constants/role-user';
+import { useDialog } from '@/providers';
+
+import { UserInfoMutateDialog } from './ui/user-info-mutate';
 
 import type { GetUser } from '@/api/endpoints/user';
 
@@ -23,7 +26,27 @@ export function UserDetailPage() {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const { data: user, isPending: userIsPending } = useUser({ userId: userId || '' });
+
   const { mutate, isPending } = UseExtractSkills();
+
+  const { showDialog } = useDialog();
+
+  const handleUserInfoMutate = () => {
+    showDialog({
+      getContent: (onClose) => (
+        <UserInfoMutateDialog
+          closeDialog={onClose}
+          name={user?.name || ''}
+          surname={user?.name || ''}
+          patronymic={user?.patronymic || ''}
+          position={user?.position || ''}
+          phoneNumber={user?.phoneNumber || ''}
+          userId={userId!}
+        />
+      ),
+    });
+  };
 
   const handleFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -45,7 +68,6 @@ export function UserDetailPage() {
     fileInputRef.current?.click();
   };
 
-  const { data: user, isPending: userIsPending } = useUser({ userId: userId || '' });
   return (
     <>
       <AppPageHeader className='mb-0'>
@@ -99,6 +121,10 @@ export function UserDetailPage() {
                   )}
                 </div>
               </div>
+
+              <Button variant='outline' size='sm' className='ml-2 h-8 w-8 p-0' onClick={handleUserInfoMutate}>
+                <Pencil className='h-4 w-4' />
+              </Button>
             </div>
           </CardContent>
           <CardContent>

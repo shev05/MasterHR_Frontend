@@ -1,10 +1,13 @@
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { useProjectInfoMutate } from '@/api/endpoints/project';
+import { useUserUpdate } from '@/api/endpoints/user';
 import { yupCustomResolver } from '@/shared/lib/yup-custom-resolver';
 import { useCloseDialogAlert } from '@/shared/hooks/use-close-dialog-alert';
 import { toast } from '@/shared/components/app-toaster';
 import { parseApiErrors } from '@/api/http-client';
+import { PLACEHOLDERS } from '@/shared/constants/placeholders';
+import { FormInput } from '@/shared/components/controls';
+import { FormPhoneInput } from '@/shared/components/controls/number-input';
 import {
   Dialog,
   DialogBody,
@@ -16,39 +19,39 @@ import {
   DialogTitle,
   SuspenseWrapper,
 } from '@/shared/components/ui';
-import { PLACEHOLDERS } from '@/shared/constants/placeholders';
-import { FormInput } from '@/shared/components/controls';
 
 import {
-  createProjectInfoFormValues,
-  PROJECT_INFO_BASE_SCHEMA,
-  PROJECT_INFO_DEFAULT_VALUES,
-  PROJECT_INFO_FIELDS,
-  type ProjectInfoFormValue,
-} from './project-info-mutate.lib';
+  createUserInfoFormValues,
+  USER_INFO_BASE_SCHEMA,
+  USER_INFO_DEFAULT_VALUES,
+  USER_INFO_FIELDS,
+} from './user-info-mutate.lib';
 
-import type { GetProject } from '@/api/endpoints/project';
 import type { BaseDialogProps } from '@/shared/interface';
+import type { GetUser, PutUser } from '@/api/endpoints/user';
 import type { FC } from 'react';
+import type { UserInfoFormValue } from './user-info-mutate.lib';
 
-type ProjectInfoMutateDialogProps = BaseDialogProps & {
-  title: GetProject['title'];
-  description: GetProject['description'];
-  projectId: GetProject['id'];
-};
+type UserInfoMutateDialogProps = BaseDialogProps &
+  PutUser & {
+    userId: GetUser['id'];
+  };
 
-export const ProjectInfoMutateDialog: FC<ProjectInfoMutateDialogProps> = ({
-  title,
-  description,
-  projectId,
+export const UserInfoMutateDialog: FC<UserInfoMutateDialogProps> = ({
+  name,
+  surname,
+  patronymic,
+  phoneNumber,
+  position,
+  userId,
   closeDialog,
 }) => {
-  const { mutate, isPending } = useProjectInfoMutate();
+  const { mutate: update, isPending } = useUserUpdate();
 
-  const form = useForm<ProjectInfoFormValue>({
-    defaultValues: PROJECT_INFO_DEFAULT_VALUES,
-    values: createProjectInfoFormValues(title, description),
-    resolver: yupCustomResolver({ validationSchema: PROJECT_INFO_BASE_SCHEMA }),
+  const form = useForm<UserInfoFormValue>({
+    defaultValues: USER_INFO_DEFAULT_VALUES,
+    values: createUserInfoFormValues({ name, surname, patronymic, phoneNumber, position }),
+    resolver: yupCustomResolver({ validationSchema: USER_INFO_BASE_SCHEMA }),
   });
 
   const { openCloseDialogAlert } = useCloseDialogAlert();
@@ -66,7 +69,7 @@ export const ProjectInfoMutateDialog: FC<ProjectInfoMutateDialogProps> = ({
       onError: (error: Error) => parseApiErrors({ error, setError }),
     };
 
-    mutate({ projectId, data: formValues }, mutationConfig);
+    update({ userId, data: formValues }, mutationConfig);
   });
 
   const handleDialogClose = () => {
@@ -81,18 +84,21 @@ export const ProjectInfoMutateDialog: FC<ProjectInfoMutateDialogProps> = ({
   };
   return (
     <Dialog onOpenChange={handleDialogClose} open>
-      <DialogContent className='max-w-6xl'>
+      <DialogContent className='max-w-xl'>
         <FormProvider {...form}>
           <form noValidate onSubmit={handleFormSubmit} className='flex flex-col justify-between overflow-hidden'>
             <DialogHeader>
-              <DialogTitle>{'Изменить информацию'}</DialogTitle>
+              <DialogTitle>{'Изменит информацию'}</DialogTitle>
               <SuspenseWrapper>
                 <DialogDescription>{PLACEHOLDERS.dialog}</DialogDescription>
               </SuspenseWrapper>
             </DialogHeader>
             <DialogBody className={'pb-4'}>
-              <FormInput name={PROJECT_INFO_FIELDS.TITLE} label='Название' required />
-              <FormInput name={PROJECT_INFO_FIELDS.DESCRIPTION} label='Описание' required />
+              <FormInput name={USER_INFO_FIELDS.NAME} label='Имя' required />
+              <FormInput name={USER_INFO_FIELDS.SURNAME} label='Фамилия' required />
+              <FormInput name={USER_INFO_FIELDS.PATRONYMIC} label='Отчество' required />
+              <FormInput name={USER_INFO_FIELDS.POSITION} label='Должность' required />
+              <FormPhoneInput name={USER_INFO_FIELDS.PHONE_NUMBER} label='Номер телефона' required />
             </DialogBody>
             <DialogFooter className='relative'>
               <DialogButtonGroup disabled={isPending} handleClose={handleDialogClose} />
