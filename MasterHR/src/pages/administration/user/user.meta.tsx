@@ -62,7 +62,7 @@ export const getColumns = ({ onView }: GetColumnsProps) => [
   columnHelper.accessor('role', {
     id: 'role',
     cell: ({ row }) => <span>{roleUser[row.original?.role]}</span>,
-    header: 'Должность',
+    header: 'Роль',
     enableSorting: false,
   }),
   columnHelper.display({
