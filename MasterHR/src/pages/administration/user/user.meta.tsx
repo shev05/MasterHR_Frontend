@@ -3,6 +3,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { roleUser } from '@/shared/constants/role-user';
 import { BASE_ACTION_CELL_CONFIG, TableActions } from '@/shared/components/app-table/app-table-actions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui';
+import { API_BASE_URL } from '@/api/http-client';
 
 import type { GetUser } from '@/api/endpoints/user';
 import type { BaseGetColumnsProps } from '@/shared/interface';
@@ -17,7 +18,7 @@ export const getColumns = ({ onView }: GetColumnsProps) => [
     cell: ({ row }) => {
       return (
         <Avatar className='h-7 w-7'>
-          <AvatarImage src={row.original?.avatar} />
+          <AvatarImage src={`${API_BASE_URL}${row.original?.avatar}`} />
           <AvatarFallback>
             {row.original?.name?.charAt(0).toUpperCase()}
             {row.original?.surname?.charAt(0).toUpperCase()}

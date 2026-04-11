@@ -16,13 +16,14 @@ import { parseApiErrors } from '@/api/http-client';
 
 import { getColumns } from './project.meta';
 import { ProjectCreateDialog } from './ui/project-create-dialog';
+import { ProjectFilters } from './ui';
 
 import type { GetProject } from '@/api/endpoints/project';
 
 export function ProjectPage() {
   const navigate = useNavigate();
 
-  const { controlledParams, updateParams } = useQueryParams({
+  const { controlledParams, updateParams, appliedFiltersCount, resetFilters } = useQueryParams({
     schema: { ...PROJECT_SCHEMA_QUERIES, ...BASE_SCHEMA_QUERIES },
     defaultValues: { ...DEFAULT_QUERIES },
   });
@@ -58,6 +59,14 @@ export function ProjectPage() {
       >
         <AddButton onClick={() => handleProjectCreate()}>Создать проект</AddButton>
       </AppPageHeader>
+      <ErrorBoundary fallback={<ErrorBoundaryFallback text={PLACEHOLDERS.filtersError} />}>
+        <ProjectFilters
+          filters={controlledParams}
+          updateFilters={updateParams}
+          appliedFiltersCount={appliedFiltersCount}
+          onFiltersReset={resetFilters}
+        />
+      </ErrorBoundary>
       <ErrorBoundary fallback={<ErrorBoundaryFallback text={PLACEHOLDERS.tableError} />}>
         <AppTable
           data={projectList?.list}

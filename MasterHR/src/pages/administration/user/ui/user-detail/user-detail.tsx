@@ -16,6 +16,7 @@ import {
 import { ROUTES_META } from '@/shared/constants/routes/router-meta';
 import { roleUser } from '@/shared/constants/role-user';
 import { useDialog } from '@/providers';
+import { API_BASE_URL } from '@/api/http-client';
 
 import { UserInfoMutateDialog } from './ui/user-info-mutate';
 
@@ -81,7 +82,7 @@ export function UserDetailPage() {
           <CardContent className='pt-6'>
             <div className='flex flex-col items-center gap-6 sm:flex-row sm:items-start'>
               <Avatar className='h-24 w-24'>
-                <AvatarImage src={user?.avatar} />
+                <AvatarImage src={`${API_BASE_URL}${user?.avatar}`} />
                 <AvatarFallback>
                   {user?.name?.charAt(0).toUpperCase()}
                   {user?.surname?.charAt(0).toUpperCase()}
@@ -122,9 +123,11 @@ export function UserDetailPage() {
                 </div>
               </div>
 
-              <Button variant='outline' size='sm' className='ml-2 h-8 w-8 p-0' onClick={handleUserInfoMutate}>
-                <Pencil className='h-4 w-4' />
-              </Button>
+              {user?.canEdit && (
+                <Button variant='outline' size='sm' className='ml-2 h-8 w-8 p-0' onClick={handleUserInfoMutate}>
+                  <Pencil className='h-4 w-4' />
+                </Button>
+              )}
             </div>
           </CardContent>
           <CardContent>

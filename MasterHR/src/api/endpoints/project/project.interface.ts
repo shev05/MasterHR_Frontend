@@ -3,7 +3,9 @@ import type { GetUser } from '@/api/endpoints/user';
 import type { GetTags } from '@/api/endpoints/tags';
 
 export const PROJECT_SCHEMA_QUERIES = {
-  search: 'string',
+  SearchBy: 'string',
+  FilterByCreator: 'string',
+  FiltredByTags: 'string',
 } as const;
 
 export type BaseProjectQueries = QueriesSchemaToType<typeof PROJECT_SCHEMA_QUERIES>;

@@ -20,6 +20,7 @@ import { ROUTES_META } from '@/shared/constants/routes/router-meta';
 import { sFormat } from '@/shared/lib';
 import { roleUser } from '@/shared/constants/role-user';
 import { useDialog } from '@/providers';
+import { API_BASE_URL } from '@/api/http-client';
 
 import { ProjectTagsMutateDialog } from './ui/project-tags-mutate';
 import { ProjectInfoMutateDialog } from './ui/project-info-mutate';
@@ -136,7 +137,7 @@ export function ProjectDetailPage() {
                     <div key={user.id} className='flex items-center justify-between border-b py-2 last:border-0'>
                       <div className='flex min-w-0 flex-1 items-center gap-3'>
                         <Avatar className='h-10 w-10 flex-shrink-0'>
-                          <AvatarImage src={user.avatar} />
+                          <AvatarImage src={`${API_BASE_URL}${user?.avatar}`} />
                           <AvatarFallback className='text-sm'>
                             {user.name?.charAt(0).toUpperCase()}
                             {user.surname?.charAt(0).toUpperCase()}
@@ -175,7 +176,7 @@ export function ProjectDetailPage() {
 
               <div className='flex items-center gap-3 pt-2'>
                 <Avatar className='h-12 w-12 flex-shrink-0'>
-                  <AvatarImage src={project?.createdBy.avatar} />
+                  <AvatarImage src={`${API_BASE_URL}${project?.createdBy.avatar}`} />
                   <AvatarFallback className='text-sm'>
                     {project?.createdBy.name?.charAt(0).toUpperCase()}
                     {project?.createdBy.surname?.charAt(0).toUpperCase()}

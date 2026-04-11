@@ -16,6 +16,7 @@ export type BaseUser = {
   position: string;
   role: number;
   avatar: string;
+  canEdit: boolean;
 };
 
 export type GetUser = GetType<BaseUser>;

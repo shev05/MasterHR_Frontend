@@ -1,6 +1,7 @@
-import { useId, useMemo, useState, type ReactElement, useEffect } from 'react';
-import { ChevronDownIcon } from 'lucide-react';
-import { List } from 'react-window';
+import { Combobox } from '@base-ui/react/combobox';
+import { useVirtualizer } from '@tanstack/react-virtual';
+import { CheckIcon, ChevronDownIcon } from 'lucide-react';
+import { useCallback, useDeferredValue, useId, useMemo, useRef, useState } from 'react';
 
 import {
   BaseCombobox,
@@ -18,144 +19,195 @@ import {
   FieldError,
   FieldLabel,
 } from '@/shared/components/ui';
+import { cn } from '@/shared/lib/cn';
 
 import type { BaseComboboxProps, ComboboxInputProps, FieldErrorProps } from '@/shared/components/ui';
-import type { RowComponentProps } from 'react-window';
-import type { OptionBase } from '@/shared/interface';
 import type { FC } from 'react';
+import type { OptionBase } from '@/shared/interface';
 
-export type ComboboxVirtualProps = BaseComboboxProps & {
+export type VirtualComboboxProps = BaseComboboxProps & {
   label?: string;
   description?: string;
   placeholder?: string;
   errors?: FieldErrorProps['errors'];
   invalid?: boolean;
-  options?: OptionBase[];
+  options?: Array<OptionBase>;
 
-  itemHeight?: number;
-  listHeight?: number;
-  onClear?: () => void;
   comboboxInputValue?: string;
   onComboboxInputValueChange?: ComboboxInputProps['onChange'];
 };
 
-const VirtualItem = ({ index, style, data }: RowComponentProps<{ data: OptionBase[] }>): ReactElement => {
-  const item = data[index];
+function getItemLabel(item: OptionBase | null) {
+  return item ? item.label : '';
+}
 
-  return (
-    <ComboboxItem value={item.value} style={style} className='flex'>
-      <ComboboxItemIndicator />
-      <span>{item.label}</span>
-    </ComboboxItem>
-  );
-};
-
-export const ComboboxVirtual: FC<ComboboxVirtualProps> = ({
+export const VirtualCombobox: FC<VirtualComboboxProps> = ({
+  placeholder = 'Выберите значение',
   label,
   required = false,
-  description,
-  placeholder = 'Выберите значение',
-  errors,
-  invalid = false,
   options = [],
-  itemHeight = 36,
-  listHeight = 300,
-  onClear,
-  comboboxInputValue,
-  onComboboxInputValueChange,
+  description,
+  invalid = false,
+  errors,
+
   value,
-  ...props
-}: ComboboxVirtualProps) => {
-  const comboboxId = useId();
-  const [inputValue, setInputValue] = useState<string>('');
+  onValueChange,
 
-  useEffect(() => {
-    if (value !== undefined) {
-      const selectedOption = options.find((option) => option.value === value?.toString());
-      if (selectedOption) {
-        setInputValue(selectedOption.label);
-      }
+  ...restProps
+}) => {
+  const id = useId();
+  const [open, setOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
+
+  const deferredSearchValue = useDeferredValue(searchValue);
+
+  const scrollElementRef = useRef<Nullable<HTMLDivElement>>(null);
+
+  const { contains } = Combobox.useFilter({ value: value });
+
+  const resolvedSearchValue = searchValue === '' || deferredSearchValue === '' ? searchValue : deferredSearchValue;
+
+  const filteredItems = useMemo(() => {
+    if (resolvedSearchValue === '') {
+      return options;
     }
-  }, [value, options]);
+    return options.filter((item) => contains(item, resolvedSearchValue, getItemLabel));
+  }, [contains, resolvedSearchValue, options]);
 
-  const filteredOptions = useMemo(() => {
-    if (!inputValue) return options;
+  const virtualizer = useVirtualizer({
+    enabled: open,
+    count: filteredItems.length,
+    getScrollElement: () => scrollElementRef.current,
+    estimateSize: () => 32,
+    overscan: 20,
+    paddingStart: 8,
+    paddingEnd: 8,
+    scrollPaddingEnd: 8,
+    scrollPaddingStart: 8,
+  });
 
-    return options.filter((option) => option.label.toLocaleLowerCase().includes(inputValue.toLocaleLowerCase()));
-  }, [options, inputValue]);
+  const handleScrollElementRef = useCallback(
+    (element: HTMLDivElement | null) => {
+      scrollElementRef.current = element;
+      if (element) {
+        virtualizer.measure();
+      }
+    },
+    [virtualizer]
+  );
+
+  const totalSize = virtualizer.getTotalSize();
 
   return (
-    <Field data-invalid={invalid}>
-      {label && (
-        <FieldLabel htmlFor={comboboxId} className='px-2'>
-          {label}
-          {required && <span className='text-destructive'>*</span>}
-        </FieldLabel>
-      )}
+    <Field data-invalid={invalid} className='min-w-42'>
       <BaseCombobox
+        {...restProps}
+        disabled={restProps.disabled}
+        virtualized
         items={options}
-        id={comboboxId}
-        value={value}
-        {...props}
-        onValueChange={(value, e) => {
-          if (value == null) return;
-          const selectedOption = options.find((option) => option.value === value?.toString());
-          setInputValue(selectedOption?.label || '');
-          props.onValueChange?.(value, e);
+        filteredItems={filteredItems}
+        open={open}
+        onOpenChange={setOpen}
+        inputValue={value?.label || searchValue || ''}
+        onInputValueChange={setSearchValue}
+        value={value || null}
+        onValueChange={onValueChange}
+        itemToStringLabel={getItemLabel}
+        itemToStringValue={(item) => item?.value.toString() || ''}
+        onItemHighlighted={(item, { reason, index }) => {
+          if (!item) {
+            return;
+          }
+
+          const isStart = index === 0;
+          const isEnd = index === filteredItems.length - 1;
+          const shouldScroll = reason === 'none' || (reason === 'keyboard' && (isStart || isEnd));
+
+          if (shouldScroll) {
+            queueMicrotask(() => {
+              virtualizer.scrollToIndex(index, { align: isEnd ? 'start' : 'end' });
+            });
+          }
         }}
       >
-        <div className='relative flex flex-col gap-2'>
-          <ComboboxInput
-            placeholder={placeholder}
-            value={inputValue}
-            id={comboboxId}
-            onChange={(e) => {
-              setInputValue(e.target.value);
-              onComboboxInputValueChange?.(e);
-            }}
-          />
-          <div className='text-muted-foreground absolute bottom-0 right-0.5 flex h-9 items-center justify-center'>
-            {inputValue && (
-              <ComboboxClear
-                onClick={() => {
-                  setInputValue('');
-                  onClear?.();
-                }}
-              />
-            )}
+        <div className='relative flex flex-col'>
+          {label && (
+            <FieldLabel htmlFor={id}>
+              {label}
+              {required && '*'}
+            </FieldLabel>
+          )}
+
+          <ComboboxInput aria-invalid={invalid} placeholder={placeholder} id={id} className={'pe-15 truncate'} />
+          <div className='text-muted-foreground absolute bottom-0 right-1 flex h-9 items-center justify-center'>
+            <ComboboxClear />
+
             <ComboboxTrigger
-              className='text-muted-foreground h-9 w-8 border-none bg-transparent shadow-none hover:bg-transparent'
+              aria-invalid={invalid}
+              className={cn(
+                'text-muted-foreground h-9 w-6 border-none bg-transparent shadow-none hover:bg-transparent',
+                restProps?.disabled && 'opacity-50'
+              )}
               aria-label='Open popup'
             >
               <ChevronDownIcon className='size-4' />
             </ComboboxTrigger>
           </div>
         </div>
-        <ComboboxPositioner sideOffset={6}>
-          <ComboboxPopup>
-            {filteredOptions.length === 0 ? (
-              <ComboboxEmpty>Не найдено</ComboboxEmpty>
-            ) : (
-              <ComboboxList>
-                {filteredOptions.length === 0 ? (
-                  <ComboboxEmpty>Не найдено</ComboboxEmpty>
-                ) : (
-                  <div style={{ height: listHeight }}>
-                    <List
-                      rowCount={filteredOptions.length}
-                      rowHeight={itemHeight}
-                      rowComponent={VirtualItem}
-                      rowProps={{ data: filteredOptions }}
-                    />
+
+        <ComboboxPositioner sideOffset={4} className='outline-none'>
+          <ComboboxPopup className='max-h-[min(22rem,var(--available-height))] w-[var(--anchor-width)] max-w-[var(--available-width)]'>
+            <ComboboxEmpty>Не найдено</ComboboxEmpty>
+            <ComboboxList className='p-0'>
+              {filteredItems.length > 0 && (
+                <div
+                  role='presentation'
+                  ref={handleScrollElementRef}
+                  className='h-[min(21rem,var(--total-size))] max-h-[var(--available-height)] scroll-p-2 overflow-auto overscroll-contain'
+                  style={{ '--total-size': `${totalSize}px` } as React.CSSProperties}
+                >
+                  <div role='presentation' className='relative w-full' style={{ height: totalSize }}>
+                    {virtualizer.getVirtualItems().map((virtualItem) => {
+                      const item = filteredItems[virtualItem.index];
+                      if (!item) return null;
+
+                      const isSelected = value?.value === item.value;
+
+                      return (
+                        <ComboboxItem
+                          key={virtualItem.key}
+                          index={virtualItem.index}
+                          data-index={virtualItem.index}
+                          ref={virtualizer.measureElement}
+                          value={item}
+                          aria-setsize={filteredItems.length}
+                          aria-posinset={virtualItem.index + 1}
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            // minHeight: virtualItem.size,
+                            transform: `translateY(${virtualItem.start}px)`,
+                          }}
+                        >
+                          <ComboboxItemIndicator keepMounted={isSelected}>
+                            <CheckIcon className={'size-4'} />
+                          </ComboboxItemIndicator>
+
+                          <div className='col-start-2'>{item.label}</div>
+                        </ComboboxItem>
+                      );
+                    })}
                   </div>
-                )}
-              </ComboboxList>
-            )}
+                </div>
+              )}
+            </ComboboxList>
           </ComboboxPopup>
         </ComboboxPositioner>
       </BaseCombobox>
-      {invalid && <FieldError errors={errors} className='px-2' />}
-      {description && <FieldDescription className='px-2'>{description}</FieldDescription>}
+      {description && <FieldDescription>{description}</FieldDescription>}
+      {invalid && <FieldError errors={errors} />}
     </Field>
   );
 };

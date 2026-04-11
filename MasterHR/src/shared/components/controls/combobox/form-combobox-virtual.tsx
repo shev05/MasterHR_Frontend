@@ -1,34 +1,49 @@
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { ComboboxVirtual } from './combobox-virtual';
+import { VirtualCombobox } from './combobox-virtual';
 
-import type { ComboboxVirtualProps } from './combobox-virtual';
-import type { FC } from 'react';
+import type { Control, FieldValues, Path } from 'react-hook-form';
+import type { VirtualComboboxProps } from './combobox-virtual';
+import type { OptionBase } from '@/shared/interface';
 
-export type FormComboboxVirtualProps = ComboboxVirtualProps & {
-  name: string;
-  onChangeCallback?: (value: unknown) => void;
+type FormComboboxProps<T extends FieldValues> = Omit<VirtualComboboxProps, 'onClear'> & {
+  name: Path<T>;
+  control?: Control<T>;
+  onChangeCallback?: (value: Nullable<OptionBase>) => void;
 };
 
-export const FormComboboxVirtual: FC<FormComboboxVirtualProps> = ({ name, onChangeCallback, ...props }) => {
-  const { control } = useFormContext();
+export const FormVirtualCombobox = <T extends FieldValues>({
+  name,
+  options,
+  onChangeCallback,
+  control: externalControl,
+  ...restProps
+}: FormComboboxProps<T>) => {
+  const formContext = useFormContext<T>();
+  const control = externalControl || formContext?.control;
 
   return (
     <Controller
       name={name}
       control={control}
-      render={({ fieldState, field }) => (
-        <ComboboxVirtual
-          {...field}
-          errors={[fieldState.error]}
-          onValueChange={(value) => {
-            onChangeCallback?.(value);
-            field.onChange(value);
-          }}
-          invalid={fieldState.invalid}
-          {...props}
-        />
-      )}
+      render={({ field, fieldState }) => {
+        const handleValueChange = (selectedOption: Nullable<OptionBase>) => {
+          field.onChange(selectedOption);
+          onChangeCallback?.(selectedOption);
+        };
+
+        return (
+          <VirtualCombobox
+            {...field}
+            onValueChange={(value) => handleValueChange(value)}
+            invalid={fieldState.invalid}
+            errors={[fieldState.error]}
+            options={options}
+            {...restProps}
+            disabled={restProps.disabled || field.disabled}
+          />
+        );
+      }}
     />
   );
 };
