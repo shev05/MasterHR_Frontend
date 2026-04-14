@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Avatar,
   AvatarFallback,
+  AvatarImage,
   Badge,
   DropdownMenu,
   DropdownMenuContent,
@@ -21,6 +22,7 @@ import {
 import { ROUTES_META } from '@/shared/constants/routes/router-meta';
 import { removeIsAuth } from '@/store';
 import { useNotifications } from '@/shared/hooks/use-notification';
+import { API_BASE_URL } from '@/api/http-client';
 
 import { NotificationBell } from './notification';
 
@@ -33,11 +35,13 @@ type BaseUserAvatarView = {
   patronymic?: GetUser['patronymic'];
   email?: GetUser['email'];
   position?: GetUser['position'];
+  avatar?: GetUser['avatar'];
 };
 
-const UserAvatar: FC<BaseUserAvatarView> = ({ name, surname, patronymic }) => {
+const UserAvatar: FC<BaseUserAvatarView> = ({ name, surname, patronymic, avatar }) => {
   return (
     <Avatar className={'rounded'}>
+      <AvatarImage src={`${API_BASE_URL}${avatar}`} />
       <AvatarFallback className={'rounded'}>
         {name?.charAt(0).toUpperCase()}
         {surname?.charAt(0).toUpperCase()}
@@ -88,7 +92,7 @@ export const NavUser: FC<NavUserProps> = ({ user }) => {
                 size='lg'
                 className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground h-fit'
               >
-                <UserAvatar name={user.name} surname={user.surname} patronymic={user.patronymic} />
+                <UserAvatar name={user.name} surname={user.surname} patronymic={user.patronymic} avatar={user.avatar} />
                 <UserInfo
                   name={user.name}
                   surname={user.surname}
@@ -116,9 +120,14 @@ export const NavUser: FC<NavUserProps> = ({ user }) => {
                   <div
                     className='flex cursor-pointer items-center gap-2 px-1 py-1.5 text-left text-sm transition-all duration-200 hover:rounded-md hover:bg-gray-800'
                     onClick={handleViewUserPage}
-                    title='Перейти на страницу пользователя'
+                    title='Перейти на страницу сотрудника'
                   >
-                    <UserAvatar name={user.name} surname={user.surname} patronymic={user.patronymic} />
+                    <UserAvatar
+                      name={user.name}
+                      surname={user.surname}
+                      patronymic={user.patronymic}
+                      avatar={user.avatar}
+                    />
                     <UserInfo
                       name={user.name}
                       surname={user.surname}

@@ -2,11 +2,12 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { Button } from '@/shared/components/ui';
 import { toast } from '@/shared/components/app-toaster';
-import { FormInput, FormPasswordInput } from '@/shared/components/controls';
+import { FormPasswordInput } from '@/shared/components/controls';
 import { useRegister } from '@/api/endpoints/login';
 import { parseApiErrors } from '@/api/http-client';
 import { yupCustomResolver } from '@/shared/lib/yup-custom-resolver';
 import { FormPhoneInput } from '@/shared/components/controls/number-input';
+import { FormVoiceInput } from '@/shared/components/controls/voice-input';
 
 import { REGISTER_DEFAULT_VALUES, REGISTER_FIELDS, REGISTER_FORM_SCHEMA } from './register-form.lib';
 
@@ -36,16 +37,16 @@ export const RegisterForm: FC = () => {
   return (
     <FormProvider {...form}>
       <form noValidate onSubmit={handleFormSubmit} className='space-y-4'>
-        <FormInput id={REGISTER_FIELDS.NAME} name={REGISTER_FIELDS.NAME} label='Имя' required />
-        <FormInput id={REGISTER_FIELDS.SURNAME} name={REGISTER_FIELDS.SURNAME} label='Фамилия' required />
-        <FormInput id={REGISTER_FIELDS.PATRONYMC} name={REGISTER_FIELDS.PATRONYMC} label='Отчество' required />
+        <FormVoiceInput id={REGISTER_FIELDS.NAME} name={REGISTER_FIELDS.NAME} label='Имя' required />
+        <FormVoiceInput id={REGISTER_FIELDS.SURNAME} name={REGISTER_FIELDS.SURNAME} label='Фамилия' required />
+        <FormVoiceInput id={REGISTER_FIELDS.PATRONYMC} name={REGISTER_FIELDS.PATRONYMC} label='Отчество' required />
         <FormPhoneInput
           id={REGISTER_FIELDS.PHONENUMBER}
           name={REGISTER_FIELDS.PHONENUMBER}
           label='Номер телефона'
           required
         />
-        <FormInput
+        <FormVoiceInput
           id={REGISTER_FIELDS.EMAIL}
           name={REGISTER_FIELDS.EMAIL}
           label='Почта'

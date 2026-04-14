@@ -17,6 +17,7 @@ export const FormSelect: FC<FormSelectProps> = ({ name, onChangeCallback, ...pro
     <Controller
       name={name}
       control={control}
+      defaultValue=''
       render={({ field, fieldState }) => {
         return (
           <Select

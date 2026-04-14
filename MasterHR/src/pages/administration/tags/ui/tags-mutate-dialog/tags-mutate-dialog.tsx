@@ -19,7 +19,7 @@ import {
 import { CenteredSpinner } from '@/shared/components/centered-spinner';
 import { getDialogTitle } from '@/shared/lib/get-dialog-title';
 import { PLACEHOLDERS } from '@/shared/constants/placeholders';
-import { FormInput } from '@/shared/components/controls';
+import { FormVoiceInput } from '@/shared/components/controls/voice-input';
 
 import { createTagsFormValues, TAGS_BASE_SCHEMA, TAGS_DEFAULT_VALUES, TAGS_FIELDS } from './tags-mutate-dialog.lib';
 
@@ -86,7 +86,7 @@ export const TagsMutateDialog: FC<TagsMutateDialogProps> = ({ tagId, closeDialog
                 </SuspenseWrapper>
               </DialogHeader>
               <DialogBody className={'pb-4'}>
-                <FormInput name={TAGS_FIELDS.TITLE} label='Название' required />
+                <FormVoiceInput name={TAGS_FIELDS.TITLE} label='Название' required />
               </DialogBody>
               <DialogFooter className='relative'>
                 <DialogButtonGroup disabled={createIsPending} handleClose={handleDialogClose} />

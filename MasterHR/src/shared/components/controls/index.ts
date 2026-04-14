@@ -11,3 +11,5 @@ export * from './date-time-picker';
 export * from './date-time-range-picker';
 export * from './switch';
 export * from './multiple-select';
+export * from './voice-input';
+export * from './voice-textarea';

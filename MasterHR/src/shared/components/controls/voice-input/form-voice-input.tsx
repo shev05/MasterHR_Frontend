@@ -1,16 +1,16 @@
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { Input } from './input';
+import { VoiceInput } from './voice-input';
 
-import type { InputProps } from './input';
+import type { VoiceInputProps } from './voice-input';
 import type { FC } from 'react';
 
-type FormInputProps = InputProps & {
+type FormVoiceInputProps = VoiceInputProps & {
   name: string;
   onChangeCallback?: (value: string) => void;
 };
 
-export const FormInput: FC<FormInputProps> = ({ name, onChangeCallback, ...props }) => {
+export const FormVoiceInput: FC<FormVoiceInputProps> = ({ name, onChangeCallback, ...props }) => {
   const { control } = useFormContext();
 
   return (
@@ -19,7 +19,7 @@ export const FormInput: FC<FormInputProps> = ({ name, onChangeCallback, ...props
       control={control}
       defaultValue=''
       render={({ fieldState, field }) => (
-        <Input
+        <VoiceInput
           {...field}
           errors={[fieldState.error]}
           onValueChange={(value) => {

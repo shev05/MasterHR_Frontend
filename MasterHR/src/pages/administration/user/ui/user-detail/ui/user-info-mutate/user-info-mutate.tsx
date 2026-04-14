@@ -6,7 +6,7 @@ import { useCloseDialogAlert } from '@/shared/hooks/use-close-dialog-alert';
 import { toast } from '@/shared/components/app-toaster';
 import { parseApiErrors } from '@/api/http-client';
 import { PLACEHOLDERS } from '@/shared/constants/placeholders';
-import { FormInput } from '@/shared/components/controls';
+import { FormVoiceInput } from '@/shared/components/controls/voice-input';
 import { FormPhoneInput } from '@/shared/components/controls/number-input';
 import {
   Dialog,
@@ -94,10 +94,10 @@ export const UserInfoMutateDialog: FC<UserInfoMutateDialogProps> = ({
               </SuspenseWrapper>
             </DialogHeader>
             <DialogBody className={'pb-4'}>
-              <FormInput name={USER_INFO_FIELDS.NAME} label='Имя' required />
-              <FormInput name={USER_INFO_FIELDS.SURNAME} label='Фамилия' required />
-              <FormInput name={USER_INFO_FIELDS.PATRONYMIC} label='Отчество' required />
-              <FormInput name={USER_INFO_FIELDS.POSITION} label='Должность' required />
+              <FormVoiceInput name={USER_INFO_FIELDS.NAME} label='Имя' required />
+              <FormVoiceInput name={USER_INFO_FIELDS.SURNAME} label='Фамилия' required />
+              <FormVoiceInput name={USER_INFO_FIELDS.PATRONYMIC} label='Отчество' required />
+              <FormVoiceInput name={USER_INFO_FIELDS.POSITION} label='Должность' required />
               <FormPhoneInput name={USER_INFO_FIELDS.PHONE_NUMBER} label='Номер телефона' required />
             </DialogBody>
             <DialogFooter className='relative'>
