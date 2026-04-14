@@ -72,3 +72,12 @@ export const useUserUpdate = () => {
     },
   });
 };
+
+export const useUserAvatarUpdate = () => {
+  return useMutation({
+    mutationFn: userApi.updateAvatar,
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: userKeys.base });
+    },
+  });
+};

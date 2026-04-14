@@ -56,7 +56,7 @@ export const partialString = (fieldName: Undefinable<string> = '') =>
 
 //NUMBER
 export const requiredNumber = (requiredMessage: Undefinable<string> = VAL_MESSAGES.FIELD.REQUIRED) =>
-  Yup.number().required(requiredMessage).min(1, requiredMessage);
+  Yup.number().required(requiredMessage).typeError(requiredMessage).min(1, requiredMessage);
 export const partialNumber = () =>
   Yup.number()
     .optional()

@@ -100,6 +100,13 @@ export const VirtualCombobox: FC<VirtualComboboxProps> = ({
 
   return (
     <Field data-invalid={invalid} className='min-w-42'>
+      {label && (
+        <FieldLabel htmlFor={id} className='px-2'>
+          {label}
+          {required && <span className='text-destructive'>*</span>}
+        </FieldLabel>
+      )}
+
       <BaseCombobox
         {...restProps}
         disabled={restProps.disabled}
@@ -113,7 +120,7 @@ export const VirtualCombobox: FC<VirtualComboboxProps> = ({
         value={value || null}
         onValueChange={onValueChange}
         itemToStringLabel={getItemLabel}
-        itemToStringValue={(item) => item?.value.toString() || ''}
+        itemToStringValue={(item) => item?.value?.toString() || ''}
         onItemHighlighted={(item, { reason, index }) => {
           if (!item) {
             return;
@@ -131,13 +138,6 @@ export const VirtualCombobox: FC<VirtualComboboxProps> = ({
         }}
       >
         <div className='relative flex flex-col'>
-          {label && (
-            <FieldLabel htmlFor={id}>
-              {label}
-              {required && '*'}
-            </FieldLabel>
-          )}
-
           <ComboboxInput aria-invalid={invalid} placeholder={placeholder} id={id} className={'pe-15 truncate'} />
           <div className='text-muted-foreground absolute bottom-0 right-1 flex h-9 items-center justify-center'>
             <ComboboxClear />

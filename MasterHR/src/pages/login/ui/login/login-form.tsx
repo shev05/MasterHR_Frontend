@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom';
 
 import { Button } from '@/shared/components/ui';
 import { toast } from '@/shared/components/app-toaster';
-import { FormInput, FormPasswordInput } from '@/shared/components/controls';
+import { FormPasswordInput } from '@/shared/components/controls';
 import { useLogin } from '@/api/endpoints/login';
 import { addIsAuth } from '@/store';
 import { ROUTES_META } from '@/shared/constants/routes/router-meta';
 import { parseApiErrors } from '@/api/http-client';
 import { yupCustomResolver } from '@/shared/lib/yup-custom-resolver';
+import { FormVoiceInput } from '@/shared/components/controls/voice-input';
 
 import { LOGIN_DEFAULT_VALUES, LOGIN_FIELDS, LOGIN_FORM_SCHEMA } from './login-form.lib';
 
@@ -40,7 +41,7 @@ export const LoginForm: FC = () => {
   return (
     <FormProvider {...form}>
       <form noValidate onSubmit={handleFormSubmit} className='space-y-4'>
-        <FormInput
+        <FormVoiceInput
           id={LOGIN_FIELDS.LOGIN}
           name={LOGIN_FIELDS.LOGIN}
           label='Логин'

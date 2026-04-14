@@ -16,11 +16,12 @@ import {
   SuspenseWrapper,
 } from '@/shared/components/ui';
 import { useTagsList } from '@/api/endpoints/tags';
-import { FormInput } from '@/shared/components/controls';
+import { FormVoiceInput } from '@/shared/components/controls/voice-input';
 import { useCloseDialogAlert } from '@/shared/hooks/use-close-dialog-alert';
 import { CenteredSpinner } from '@/shared/components/centered-spinner';
 import { FormVirtualMultipleSelector } from '@/shared/components/controls/multiple-selector';
 import { ALL_ELEMENTS_QUERY } from '@/shared/constants';
+import { FormVoiceTextarea } from '@/shared/components/controls';
 
 import { CREATE_PROJECT_SCHEMA, PROJECT_FIELDS } from './project-create-dialog.lib';
 
@@ -83,14 +84,18 @@ export const ProjectCreateDialog: FC<ProjectCreateDialogProps> = ({ closeDialog 
               </DialogHeader>
 
               <DialogBody className='space-y-4 pb-4'>
-                <FormInput
+                <FormVoiceInput
                   name={PROJECT_FIELDS.TITLE}
                   label='Название проекта'
                   placeholder='Введите название проекта'
                   required
                 />
 
-                <FormInput name={PROJECT_FIELDS.DESCRIPTION} label='Описание' placeholder='Введите описание проекта' />
+                <FormVoiceTextarea
+                  name={PROJECT_FIELDS.DESCRIPTION}
+                  label='Описание'
+                  placeholder='Введите описание проекта'
+                />
 
                 <FormVirtualMultipleSelector
                   name={PROJECT_FIELDS.TAGS}

@@ -24,13 +24,24 @@ export const API_ROUTES = asTransformedRoutes({
               PROFILE: {
                 path: 'profile',
               },
+              SKILLS: {
+                path: 'skills',
+              },
             },
           },
           ME: {
             path: 'me',
+            children: {
+              SKILLS: {
+                path: 'skills',
+              },
+            },
           },
           EXTRACT_SKILLS: {
             path: 'extract-skills',
+          },
+          AVATAR: {
+            path: 'avatar',
           },
         },
       },

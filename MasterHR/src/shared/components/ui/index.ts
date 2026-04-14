@@ -30,3 +30,4 @@ export * from './dropdown-menu';
 export * from './tabs';
 export * from './drawer';
 export * from './scroll-area';
+export * from './base-textarea';

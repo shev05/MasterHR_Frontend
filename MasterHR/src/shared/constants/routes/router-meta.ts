@@ -25,13 +25,13 @@ export const ROUTES_META = asTransformedRoutes({
         children: {
           USERS: {
             path: 'users',
-            label: 'Пользователи',
+            label: 'Сотрудники',
             icon: Users2,
             dataId: 'users',
             children: {
               USER_ID: {
                 path: ':userId',
-                label: 'Пользователь',
+                label: 'Сотрудник',
                 icon: User,
               },
             },
@@ -51,7 +51,7 @@ export const ROUTES_META = asTransformedRoutes({
           TAGS: { path: 'tags', label: 'Теги', icon: Tag },
           USER_ACTIVATOR: {
             path: 'user-activator',
-            label: 'Активация пользователей',
+            label: 'Активация сотрудников',
             icon: Check,
             dataId: 'users-activator',
           },

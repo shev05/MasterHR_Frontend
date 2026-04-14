@@ -17,7 +17,8 @@ import {
   SuspenseWrapper,
 } from '@/shared/components/ui';
 import { PLACEHOLDERS } from '@/shared/constants/placeholders';
-import { FormInput } from '@/shared/components/controls';
+import { FormVoiceInput } from '@/shared/components/controls/voice-input';
+import { FormVoiceTextarea } from '@/shared/components/controls';
 
 import {
   createProjectInfoFormValues,
@@ -91,8 +92,8 @@ export const ProjectInfoMutateDialog: FC<ProjectInfoMutateDialogProps> = ({
               </SuspenseWrapper>
             </DialogHeader>
             <DialogBody className={'pb-4'}>
-              <FormInput name={PROJECT_INFO_FIELDS.TITLE} label='Название' required />
-              <FormInput name={PROJECT_INFO_FIELDS.DESCRIPTION} label='Описание' required />
+              <FormVoiceInput name={PROJECT_INFO_FIELDS.TITLE} label='Название' required />
+              <FormVoiceTextarea name={PROJECT_INFO_FIELDS.DESCRIPTION} label='Описание' required />
             </DialogBody>
             <DialogFooter className='relative'>
               <DialogButtonGroup disabled={isPending} handleClose={handleDialogClose} />

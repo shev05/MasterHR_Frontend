@@ -45,4 +45,17 @@ export const userApi = {
     });
     return response.data;
   },
+
+  updateAvatar: async (file: File) => {
+    const formData = new FormData();
+    formData.append('File', file);
+
+    const response = await httpClient.post<void>(API_ROUTES.ROOT_USER_AVATAR.absPath, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return response.data;
+  },
 };

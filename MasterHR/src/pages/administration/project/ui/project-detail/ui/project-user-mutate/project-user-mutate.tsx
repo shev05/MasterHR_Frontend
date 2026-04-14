@@ -23,7 +23,7 @@ import { CenteredSpinner } from '@/shared/components/centered-spinner';
 import { Button } from '@/shared/components/ui/button';
 import { FormSelect } from '@/shared/components/controls/select/form-select';
 import { ALL_ELEMENTS_QUERY } from '@/shared/constants';
-import { FormComboboxVirtual } from '@/shared/components/controls';
+import { FormVirtualCombobox } from '@/shared/components/controls';
 
 import {
   createProjectUsersFormValues,
@@ -57,7 +57,7 @@ export const ProjectUsersMutateDialog: FC<ProjectUsersMutateDialogProps> = ({ pr
 
   const form = useForm<ProjectUsersFormValue>({
     defaultValues: PROJECT_USERS_DEFAULT_VALUES,
-    values: createProjectUsersFormValues(projectUsers || []),
+    values: createProjectUsersFormValues(projectUsers || [], allUsersOptions),
     resolver: yupCustomResolver({
       validationSchema: PROJECT_USERS_BASE_SCHEMA,
     }),
@@ -86,15 +86,17 @@ export const ProjectUsersMutateDialog: FC<ProjectUsersMutateDialogProps> = ({ pr
 
   const handleFormSubmit = handleSubmit((formValues) => {
     const data = {
-      users: (formValues.users || []).map((user) => ({
-        id: user.id,
-        role: typeof user.role === 'string' ? parseInt(user.role, 10) : user.role,
-      })),
+      users: (formValues.users || [])
+        .filter((user) => user.id?.value)
+        .map((user) => ({
+          id: user.id.value,
+          role: typeof user.role === 'string' ? parseInt(user.role, 10) : user.role,
+        })),
     };
 
     const mutationConfig = {
       onSuccess: () => {
-        toast.success('Пользователи успешно обновлены');
+        toast.success('Сотрудник успешно обновлены');
         closeDialog();
         reset();
       },
@@ -115,7 +117,11 @@ export const ProjectUsersMutateDialog: FC<ProjectUsersMutateDialogProps> = ({ pr
     closeDialog();
   };
 
+  console.debug(allUsersOptions);
+
   const isLoading = projectUsersPending || allUsersPending;
+
+  console.debug(form.getValues());
 
   return (
     <Dialog onOpenChange={handleDialogClose} open>
@@ -124,20 +130,20 @@ export const ProjectUsersMutateDialog: FC<ProjectUsersMutateDialogProps> = ({ pr
           <FormProvider {...form}>
             <form noValidate onSubmit={handleFormSubmit} className='flex flex-col justify-between overflow-hidden'>
               <DialogHeader>
-                <DialogTitle>Управление пользователями проекта</DialogTitle>
+                <DialogTitle>Управление сотрудниками проекта</DialogTitle>
                 <SuspenseWrapper>
-                  <DialogDescription>Добавляйте и удаляйте пользователей, назначайте им роли</DialogDescription>
+                  <DialogDescription>Добавляйте и удаляйте сотрудников, назначайте им роли</DialogDescription>
                 </SuspenseWrapper>
               </DialogHeader>
 
               <DialogBody className='space-y-4 pb-4'>
                 {fields.map((field, index) => (
                   <div key={field.id} className='flex items-end gap-2'>
-                    <FormComboboxVirtual
+                    <FormVirtualCombobox
                       name={`users.${index}.id`}
                       options={allUsersOptions}
-                      placeholder='Пользователь'
-                      label='Пользователь'
+                      placeholder='Сотрудник'
+                      label='Сотрудник'
                       required
                     />
 
@@ -157,7 +163,7 @@ export const ProjectUsersMutateDialog: FC<ProjectUsersMutateDialogProps> = ({ pr
 
                 <Button type='button' variant='outline' onClick={handleAppendUser} className='flex gap-2'>
                   <Plus size={16} />
-                  Добавить пользователя
+                  Добавить сотрудника
                 </Button>
               </DialogBody>
 

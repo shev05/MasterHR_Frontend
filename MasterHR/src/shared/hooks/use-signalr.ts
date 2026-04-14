@@ -37,7 +37,7 @@ export const useSignalR = (url: string) => {
           if (connection.state === 'Disconnected') {
             startConnection();
           }
-        }, 1000);
+        }, 50000);
       }
     };
 
