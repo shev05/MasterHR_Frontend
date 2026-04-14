@@ -1,4 +1,3 @@
-// voice-input.tsx
 import { useId } from 'react';
 import { Mic, Mic2, MicOff } from 'lucide-react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
