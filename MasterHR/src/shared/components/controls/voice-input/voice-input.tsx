@@ -71,10 +71,6 @@ export const VoiceInput: FC<VoiceInputProps> = ({
 
   const isDisabled = activeInputId !== null && activeInputId !== voiceInputId;
 
-  if (!browserSupportsSpeechRecognition) {
-    console.warn('Браузер не поддерживает распознавание речи');
-  }
-
   return (
     <Field data-invalid={invalid}>
       {label && (
