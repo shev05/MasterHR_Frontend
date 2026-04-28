@@ -79,7 +79,7 @@ export const NavUser: FC<NavUserProps> = ({ user }) => {
   if (!user) return null;
 
   const handleViewUserPage = () => {
-    navigate(ROUTES_META.ROOT_ADMINISTRATION_USERS_USER_ID.generatePath({ userId: user.id }));
+    navigate(ROUTES_META.ROOT_USER_DETAIL.generatePath({ userId: user.id }));
   };
 
   return (

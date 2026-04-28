@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 
-import { requiredArray } from '@/shared/lib';
+import { partialArray } from '@/shared/lib';
 
 import type { GetUsersProject } from '@/api/endpoints/project';
 import type { OptionBase } from '@/shared/interface';
@@ -34,7 +34,7 @@ export const createProjectUsersFormValues = (
 };
 
 export const PROJECT_USERS_BASE_SCHEMA = Yup.object({
-  [PROJECT_USERS_FIELDS.USERS]: requiredArray().of(
+  [PROJECT_USERS_FIELDS.USERS]: partialArray().of(
     Yup.object({
       id: Yup.object({
         value: Yup.string().required(),

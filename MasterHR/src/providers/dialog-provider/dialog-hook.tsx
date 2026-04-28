@@ -30,7 +30,7 @@ export type LocalDialogContentState = Nullable<{
   content: JSX.Element;
 }>;
 
-export const UseLocalDialog = (): UseLocalDialogReturnType => {
+export const useLocalDialog = (): UseLocalDialogReturnType => {
   const [dialogContent, setDialogContent] = useState<LocalDialogContentState>(null);
 
   const onClose = useCallback(() => {

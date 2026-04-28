@@ -58,12 +58,6 @@ export const UseMe = () => {
   });
 };
 
-export const UseExtractSkills = () => {
-  return useMutation({
-    mutationFn: userApi.resumeFile,
-  });
-};
-
 export const useUserUpdate = () => {
   return useMutation({
     mutationFn: userApi.update,
@@ -79,5 +73,14 @@ export const useUserAvatarUpdate = () => {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: userKeys.base });
     },
+  });
+};
+
+export const useUserMatch = () => {
+  return useMutation({
+    mutationFn: userApi.match,
+    // onSettled: () => {
+    //   queryClient.invalidateQueries({ queryKey: project.base });
+    // },
   });
 };

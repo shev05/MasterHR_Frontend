@@ -33,7 +33,7 @@ export function ProjectPage() {
 
   const handleViewProjectPage = (project?: GetProject) => {
     if (!project?.id) return;
-    navigate(ROUTES_META.ROOT_ADMINISTRATION_PROJECT_PROJECT_ID.generatePath({ projectId: project.id }));
+    navigate(ROUTES_META.ROOT_PROJECT_DETAIL.generatePath({ projectId: project.id }));
   };
 
   const { showDialog } = useDialog();
@@ -53,10 +53,7 @@ export function ProjectPage() {
 
   return (
     <>
-      <AppPageHeader
-        icon={ROUTES_META.ROOT_ADMINISTRATION_PROJECT.icon}
-        title={ROUTES_META.ROOT_ADMINISTRATION_PROJECT.label}
-      >
+      <AppPageHeader icon={ROUTES_META.ROOT_PROJECT.icon} title={ROUTES_META.ROOT_PROJECT.label}>
         <AddButton onClick={() => handleProjectCreate()}>Создать проект</AddButton>
       </AppPageHeader>
       <ErrorBoundary fallback={<ErrorBoundaryFallback text={PLACEHOLDERS.filtersError} />}>

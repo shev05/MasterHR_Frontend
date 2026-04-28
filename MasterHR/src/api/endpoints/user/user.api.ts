@@ -1,7 +1,14 @@
 import { httpClient } from '@/api/http-client';
 import { API_ROUTES } from '@/api/api-routes';
 
-import type { GetExtractSkills, GetUser, GetUserPaginatedResponse, PutUser, UserQueries } from './user.interface';
+import type {
+  GetUser,
+  GetUserPaginatedResponse,
+  MatchProject,
+  MatchProjectRepsonse,
+  PutUser,
+  UserQueries,
+} from './user.interface';
 
 export const userApi = {
   getList: async ({ ...queries }: UserQueries, signal: AbortSignal) => {
@@ -37,15 +44,6 @@ export const userApi = {
     return response.data;
   },
 
-  resumeFile: async (formData: FormData) => {
-    const response = await httpClient.post<GetExtractSkills>(API_ROUTES.ROOT_USER_EXTRACT_SKILLS.absPath, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data;
-  },
-
   updateAvatar: async (file: File) => {
     const formData = new FormData();
     formData.append('File', file);
@@ -55,6 +53,12 @@ export const userApi = {
         'Content-Type': 'multipart/form-data',
       },
     });
+
+    return response.data;
+  },
+
+  match: async (data: MatchProject) => {
+    const response = await httpClient.post<MatchProjectRepsonse>(API_ROUTES.ROOT_USER_MATCH.absPath, { ...data });
 
     return response.data;
   },

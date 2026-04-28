@@ -23,6 +23,10 @@ export const filterAllowedItems = (
   if (!items || !userPermissions) return items;
 
   return items?.reduce((acc, item) => {
+    if (item.path?.includes(':')) {
+      return acc;
+    }
+
     if (item?.permissions && Array.isArray(item.permissions)) {
       const isHasAccess = item.permissions.some((itemPerm) =>
         userPermissions.some((permName) => permName === itemPerm)

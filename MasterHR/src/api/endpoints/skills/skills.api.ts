@@ -2,39 +2,40 @@ import { httpClient } from '@/api/http-client';
 import { API_ROUTES } from '@/api/api-routes';
 
 import type { BaseSkills, GetSkills, GetSkillsResponse } from './skills.interface';
-import type { GetUser } from '@/api/endpoints/user';
+import type { GetExtractSkills, GetUser } from '@/api/endpoints/user';
 
 export const skillsApi = {
   getList: async (userId: GetUser['id'], signal: AbortSignal) => {
-    const response = await httpClient.get<GetSkillsResponse>(
-      API_ROUTES.ROOT_USER_USERID_SKILLS.generatePath({ userId }),
-      {
-        signal,
-      }
-    );
-
-    return response.data;
-  },
-
-  getListMe: async (signal: AbortSignal) => {
-    const response = await httpClient.get<GetSkillsResponse>(API_ROUTES.ROOT_USER_ME_SKILLS.absPath, {
+    const response = await httpClient.get<GetSkillsResponse>(API_ROUTES.ROOT_SKILLS_USERID.generatePath({ userId }), {
       signal,
     });
 
     return response.data;
   },
 
-  create: async (data: BaseSkills) => {
-    const response = await httpClient.post<void>(API_ROUTES.ROOT_USER_ME_SKILLS.absPath, data);
+  create: async (data: BaseSkills, userId: GetUser['id']) => {
+    const response = await httpClient.post<void>(API_ROUTES.ROOT_SKILLS_USERID.generatePath({ userId }), data);
 
     return response.data;
   },
 
-  delete: async (skillId: GetSkills['id']) => {
-    const response = await httpClient.delete<void>(API_ROUTES.ROOT_USER_ME_SKILLS.absPath, {
-      params: { SkillId: skillId },
+  delete: async (skillId: GetSkills['id'], userId: GetUser['id']) => {
+    const response = await httpClient.delete<void>(API_ROUTES.ROOT_SKILLS_USERID.generatePath({ userId }), {
+      data: skillId,
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
 
+    return response.data;
+  },
+
+  resumeFile: async (formData: FormData) => {
+    const response = await httpClient.post<GetExtractSkills>(API_ROUTES.ROOT_SKILLS_EXTRACT_SKILLS.absPath, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return response.data;
   },
 };

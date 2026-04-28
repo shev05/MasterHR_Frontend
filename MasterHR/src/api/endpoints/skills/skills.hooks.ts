@@ -6,7 +6,7 @@ import { queryClient } from '@/api/query-client';
 
 import { skillsApi } from './skills.api';
 
-import type { GetSkillsResponse } from './skills.interface';
+import type { BaseSkills, GetSkills, GetSkillsResponse } from './skills.interface';
 import type { QueryOptions } from '@/shared/interface';
 import type { GetUser } from '@/api/endpoints/user';
 
@@ -27,10 +27,9 @@ export const useSkillsList = (
     ...queryOptions,
   });
 };
-
 export const useSkillsAdd = () => {
   return useMutation({
-    mutationFn: skillsApi.create,
+    mutationFn: ({ data, userId }: { data: BaseSkills; userId: GetUser['id'] }) => skillsApi.create(data, userId),
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: skillsKeys.base });
     },
@@ -39,7 +38,17 @@ export const useSkillsAdd = () => {
 
 export const useSkillsDelete = () => {
   return useMutation({
-    mutationFn: skillsApi.delete,
+    mutationFn: ({ skillId, userId }: { skillId: GetSkills['id']; userId: GetUser['id'] }) =>
+      skillsApi.delete(skillId, userId),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: skillsKeys.base });
+    },
+  });
+};
+
+export const UseExtractSkills = () => {
+  return useMutation({
+    mutationFn: skillsApi.resumeFile,
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: skillsKeys.base });
     },

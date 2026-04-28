@@ -1,6 +1,6 @@
 import { FormProvider, useForm, useFieldArray } from 'react-hook-form';
 import { Trash2, Plus } from 'lucide-react';
-import { useCallback, useMemo } from 'react'; // Добавьте useMemo
+import { useCallback, useMemo } from 'react';
 
 import { useProjectUsersMutate, useUsersProject } from '@/api/endpoints/project';
 import { useUserList } from '@/api/endpoints/user';
@@ -117,11 +117,7 @@ export const ProjectUsersMutateDialog: FC<ProjectUsersMutateDialogProps> = ({ pr
     closeDialog();
   };
 
-  console.debug(allUsersOptions);
-
   const isLoading = projectUsersPending || allUsersPending;
-
-  console.debug(form.getValues());
 
   return (
     <Dialog onOpenChange={handleDialogClose} open>

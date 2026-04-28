@@ -42,10 +42,7 @@ export function TagsPage() {
   };
   return (
     <>
-      <AppPageHeader
-        icon={ROUTES_META.ROOT_ADMINISTRATION_TAGS.icon}
-        title={ROUTES_META.ROOT_ADMINISTRATION_TAGS.label}
-      >
+      <AppPageHeader icon={ROUTES_META.ROOT_TAGS.icon} title={ROUTES_META.ROOT_TAGS.label}>
         <AddButton onClick={() => handleTagsMutate()}>Создать тег</AddButton>
       </AppPageHeader>
       <ErrorBoundary fallback={<ErrorBoundaryFallback text={PLACEHOLDERS.filtersError} />}>

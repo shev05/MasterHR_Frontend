@@ -8,8 +8,13 @@ import { transformDataToOptions } from '@/shared/lib/transform-data-to-options';
 import { projectApi } from './project.api';
 
 import type { BaseQueryListHookProps, QueryOptions } from '@/shared/interface';
-import type { GetProject, GetProjectPaginatedResponse, GetUsersProject, ProjectQueries } from './project.interface';
-import type { GetTags } from '@/api/endpoints/tags';
+import type {
+  GetProject,
+  GetProjectPaginatedResponse,
+  GetUsersProject,
+  ProjectQueries,
+  ProjectTag,
+} from './project.interface';
 
 const projectKeys = getApiBaseKeys(API_ROUTES.ROOT_PROJECT.absPath);
 const projectUserKeys = getApiBaseKeys(API_ROUTES.ROOT_PROJECT_PROJECT_ID_USERS.absPath);
@@ -64,7 +69,7 @@ export const useUsersProject = (
 
 export const useTagsProject = (
   { projectId }: QueryHookProps,
-  queryOptions?: QueryOptions<GetTags[], ReturnType<typeof projectTagsKeys.detail>>
+  queryOptions?: QueryOptions<ProjectTag, ReturnType<typeof projectTagsKeys.detail>>
 ) => {
   const query = useQuery({
     queryKey: projectTagsKeys.detail(projectId),
@@ -72,7 +77,7 @@ export const useTagsProject = (
     ...queryOptions,
   });
 
-  const options = transformDataToOptions(query?.data, {
+  const options = transformDataToOptions(query?.data?.tags, {
     asIdKey: 'id',
     asValueKey: 'id',
     asLabelKeys: 'title',
@@ -88,7 +93,15 @@ export const useProjectUsersMutate = () => {
   return useMutation({
     mutationFn: projectApi.updateUsers,
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: projectUserKeys.base });
+      queryClient.invalidateQueries({ queryKey: projectKeys.base });
+    },
+  });
+};
+
+export const useUserAddProject = () => {
+  return useMutation({
+    mutationFn: projectApi.addUser,
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: projectKeys.base });
     },
   });
@@ -98,7 +111,6 @@ export const useProjectTagsMutate = () => {
   return useMutation({
     mutationFn: projectApi.updateTags,
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: projectTagsKeys.base });
       queryClient.invalidateQueries({ queryKey: projectKeys.base });
     },
   });

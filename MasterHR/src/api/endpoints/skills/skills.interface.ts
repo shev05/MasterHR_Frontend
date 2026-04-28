@@ -14,8 +14,8 @@ export const optionSkillsLevel = [
 
 export type BaseSkills = {
   name: string;
-  level: string;
   years: number;
+  level?: string;
 };
 
 export type GetSkills = WithId<BaseSkills>;

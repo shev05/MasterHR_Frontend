@@ -1,8 +1,8 @@
 import { useRef } from 'react';
-import { ArrowLeft, Briefcase, Mail, Pencil, Phone, Trash2 } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Briefcase, Mail, Pencil, Phone, Trash2 } from 'lucide-react';
+import { useParams } from 'react-router-dom';
 
-import { UseExtractSkills, UseMe, useUser, useUserAvatarUpdate } from '@/api/endpoints/user';
+import { UseMe, useUser, useUserAvatarUpdate } from '@/api/endpoints/user';
 import { AppPageHeader } from '@/shared/components/app-page-header';
 import {
   Avatar,
@@ -13,30 +13,30 @@ import {
   CardContent,
   SuspenseWrapper,
 } from '@/shared/components/ui';
-import { ROUTES_META } from '@/shared/constants/routes/router-meta';
 import { roleUser } from '@/shared/constants/role-user';
 import { useDialog } from '@/providers';
 import { API_BASE_URL, parseApiErrors } from '@/api/http-client';
-import { useSkillsDelete, useSkillsList, type GetSkills } from '@/api/endpoints/skills';
+import { UseExtractSkills, useSkillsDelete, useSkillsList, type GetSkills } from '@/api/endpoints/skills';
 import { toast } from '@/shared/components/app-toaster';
 import { CenteredSpinner } from '@/shared/components/centered-spinner';
 import { cn } from '@/shared/lib';
+import { BackButton } from '@/shared/components/back-button';
 
 import { UserInfoMutateDialog } from './ui/user-info-mutate';
 import { UserSkillsCreateDialog } from './ui/user-skills-add';
 import { AvatarUploadDialog } from './ui/user-avatar-add';
+import { UserMatchProjectDialog } from './ui/user-match-project';
 
 import type { GetUser } from '@/api/endpoints/user';
 
-const SKILL_LEVELS = {
-  Base: { label: 'Base', className: 'bg-green-100 text-green-800 border-green-300' },
-  Middle: { label: 'Middle', className: 'bg-orange-100 text-orange-800 border-orange-300' },
-  Advanced: { label: 'Advanced', className: 'bg-red-100 text-red-800 border-red-300' },
+const EXPERIENCE_COLORS = {
+  junior: { className: 'bg-green-100 text-green-800 border-green-300', maxYears: 1 },
+  middle: { className: 'bg-orange-100 text-orange-800 border-orange-300', maxYears: 4 },
+  senior: { className: 'bg-red-100 text-red-800 border-red-300', maxYears: Infinity },
 } as const;
 
 export function UserDetailPage() {
   const { userId } = useParams<{ userId: GetUser['id'] }>();
-  const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: currentUser } = UseMe();
@@ -50,7 +50,7 @@ export function UserDetailPage() {
   );
   const isMe = currentUser?.id === user?.id;
 
-  const { mutate, isPending } = UseExtractSkills();
+  const { mutate: skillFileAdd, isPending } = UseExtractSkills();
 
   const { showDialog } = useDialog();
 
@@ -60,7 +60,7 @@ export function UserDetailPage() {
         <UserInfoMutateDialog
           closeDialog={onClose}
           name={user?.name || ''}
-          surname={user?.name || ''}
+          surname={user?.surname || ''}
           patronymic={user?.patronymic || ''}
           position={user?.position || ''}
           phoneNumber={user?.phoneNumber || ''}
@@ -71,8 +71,18 @@ export function UserDetailPage() {
   };
 
   const handleUserSkillsAddCreate = () => {
+    if (!userId) return;
+
     showDialog({
-      getContent: (onClose) => <UserSkillsCreateDialog closeDialog={onClose} />,
+      getContent: (onClose) => <UserSkillsCreateDialog closeDialog={onClose} userId={userId} />,
+    });
+  };
+
+  const handleUserMatchProject = () => {
+    if (!userId) return;
+
+    showDialog({
+      getContent: (onClose) => <UserMatchProjectDialog closeDialog={onClose} userId={userId} />,
     });
   };
 
@@ -106,9 +116,12 @@ export function UserDetailPage() {
       const formData = new FormData();
       formData.append('resumeFile', file);
 
-      mutate(formData);
-
-      console.debug(mutate);
+      skillFileAdd(formData, {
+        onSuccess: () => {
+          toast.success('Круто');
+        },
+        onError: (error: Error) => parseApiErrors({ error }),
+      });
     } catch (error) {
       console.error('Error extracting skills:', error);
     }
@@ -119,36 +132,38 @@ export function UserDetailPage() {
   };
 
   const handleButtonDeleteSkill = (skillId: GetSkills['id']) => {
-    deleteSkill(skillId, {
-      onSuccess: () => {
-        toast.success('Навык удален');
-      },
-      onError: (error: Error) => parseApiErrors({ error }),
-    });
-  };
+    if (!userId) return;
 
-  const getLevelConfig = (level: string) => {
-    return (
-      SKILL_LEVELS[level as keyof typeof SKILL_LEVELS] || {
-        label: level,
-        className: 'bg-gray-100 text-gray-800 border-gray-300',
+    deleteSkill(
+      { skillId, userId },
+      {
+        onSuccess: () => {
+          toast.success('Навык удален');
+        },
+        onError: (error: Error) => parseApiErrors({ error }),
       }
     );
+  };
+
+  const getLevelConfig = (years: number) => {
+    if (years <= EXPERIENCE_COLORS.junior.maxYears) return EXPERIENCE_COLORS.junior;
+    if (years <= EXPERIENCE_COLORS.middle.maxYears) return EXPERIENCE_COLORS.middle;
+    return EXPERIENCE_COLORS.senior;
   };
 
   return (
     <>
       <AppPageHeader className='mb-0'>
-        <Button variant='ghost' size='sm' onClick={() => navigate(ROUTES_META.ROOT_ADMINISTRATION_USERS.absPath)}>
-          <ArrowLeft className='mr-2 h-4 w-4' />
-          Назад к сотрудникам
-        </Button>
+        <BackButton />
       </AppPageHeader>
       <SuspenseWrapper condition={userIsPending || deleteSkillIsPending} fallback={<CenteredSpinner />}>
         <Card>
           <CardContent className='pt-6'>
             <div className='flex flex-col items-center gap-6 sm:flex-row sm:items-start'>
-              <Avatar className={cn('h-24 w-24', isMe && 'cursor-pointer')} onClick={handleUserAvatarUpdateDialog}>
+              <Avatar
+                className={cn('h-24 w-24', user?.canEdit && 'cursor-pointer')}
+                onClick={handleUserAvatarUpdateDialog}
+              >
                 <AvatarImage src={`${API_BASE_URL}${user?.avatar}`} />
                 <AvatarFallback>
                   {user?.name?.charAt(0).toUpperCase()}
@@ -197,27 +212,45 @@ export function UserDetailPage() {
               )}
             </div>
           </CardContent>
-          <CardContent className='border-t pt-6'>
+          <CardContent className='flex flex-col gap-3 border-t pt-6'>
             <div className='flex justify-between'>
               <h2 className='mb-4 text-lg font-semibold'>Навыки</h2>
-              {isMe && <Button onClick={handleUserSkillsAddCreate}>Добавить навык</Button>}
+              {user?.canEdit && (
+                <div className='flex gap-2'>
+                  <>
+                    <input
+                      type='file'
+                      ref={fileInputRef}
+                      onChange={handleFile}
+                      accept='.pdf,.doc,.docx'
+                      className='hidden'
+                    />
+                    <Button onClick={handleButtonClick} disabled={isPending}>
+                      {isPending ? 'Загрузка...' : 'Загрузить резюме'}
+                    </Button>
+                  </>
+                  <Button onClick={handleUserSkillsAddCreate}>Добавить навык</Button>
+                </div>
+              )}
             </div>
             <SuspenseWrapper condition={!skillsIsPending}>
-              <div className='flex flex-wrap gap-3'>
+              <div className='max-h-70 flex flex-wrap gap-3 overflow-y-auto pr-2'>
                 {skillsData?.skills && skillsData.skills.length > 0 ? (
                   skillsData.skills.map((skill) => {
-                    const levelConfig = getLevelConfig(skill.level);
                     return (
                       <div
                         key={skill.id}
-                        className={`flex items-center gap-2 rounded-full border px-4 py-2 ${levelConfig.className}`}
+                        className={`flex items-center gap-2 rounded-full border px-4 py-2 ${getLevelConfig(skill.years).className}`}
                       >
-                        <span className='font-medium'>{skill.name}</span>
+                        <span className='truncate font-medium' title={skill.name}>
+                          {skill.name}
+                        </span>{' '}
                         <span>
-                          {levelConfig.label} {skill.years}{' '}
-                          {skill.years === 1 ? 'год' : skill.years < 5 ? 'года' : 'лет'}
+                          {skill.years != null
+                            ? `${skill.years} ${skill.years === 1 ? 'год' : skill.years < 5 ? 'года' : 'лет'}`
+                            : null}
                         </span>
-                        {isMe && (
+                        {user?.canEdit && (
                           <Button
                             variant={'ghost'}
                             size='icon-sm'
@@ -236,11 +269,11 @@ export function UserDetailPage() {
               </div>
             </SuspenseWrapper>
           </CardContent>
-          <CardContent>
-            <input type='file' ref={fileInputRef} onChange={handleFile} accept='.pdf,.doc,.docx' className='hidden' />
-            <Button onClick={handleButtonClick} disabled={isPending}>
-              {isPending ? 'Загрузка...' : 'Загрузить резюме'}
-            </Button>
+          <CardContent className='border-t pt-6'>
+            <div className='flex justify-between'>
+              <h2 className='mb-4 text-lg font-semibold'>Проекты</h2>
+              <Button onClick={handleUserMatchProject}>Найти нужный проект</Button>
+            </div>
           </CardContent>
         </Card>
       </SuspenseWrapper>

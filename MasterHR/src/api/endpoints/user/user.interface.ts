@@ -1,4 +1,5 @@
 import type { ApiPaginatedResponse, ApiResponse, GetQueries, GetType, QueriesSchemaToType } from '@/shared/interface';
+import type { GetProject } from '@/api/endpoints/project';
 
 export const USER_SCHEMA_QUERIES = {
   search: 'string',
@@ -33,6 +34,19 @@ export type PutUser = {
   position: string;
   phoneNumber: string;
 };
+
+export type MatchProject = {
+  userId: string;
+  projectIds: GetProject['id'][];
+  minScorePercent: number;
+};
+
+export type MatchProjectRepsonse = {
+  projectId: string;
+  projectName: string;
+  reason: string[];
+  score: number;
+}[];
 
 export type GetUserResponse = ApiResponse<GetUser>;
 export type GetUserPaginatedResponse = ApiPaginatedResponse<GetUser>;

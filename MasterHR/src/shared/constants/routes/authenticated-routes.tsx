@@ -22,8 +22,6 @@ const { ProjectDetailPage } = lazyImport(
 );
 const { UserDetailPage } = lazyImport(() => import('@/pages/administration/user/ui/user-detail'), 'UserDetailPage');
 
-const { ComponentsPage } = lazyImport(() => import('@/pages/components'), 'ComponentsPage');
-
 export type RouteHandle = {
   label?: string;
   icon?: React.ComponentType;
@@ -57,56 +55,34 @@ export const AUTHENTICATED_ROUTES: AppRouteObject = {
     },
 
     {
-      path: ROUTES_META.ROOT_ADMINISTRATION.path,
-      handle: getMetaByKey(ROUTES_META.ROOT_ADMINISTRATION),
-      children: [
-        {
-          path: ROUTES_META.ROOT_ADMINISTRATION_USERS.path,
-          children: [
-            {
-              path: ROUTES_META.ROOT_ADMINISTRATION_USERS_USER_ID.path,
-              handle: getMetaByKey(ROUTES_META.ROOT_ADMINISTRATION_USERS_USER_ID),
-              element: <UserDetailPage />,
-            },
-            {
-              index: true,
-              element: <UserPage />,
-              handle: getMetaByKey(ROUTES_META.ROOT_ADMINISTRATION_USERS),
-            },
-          ],
-        },
-        {
-          path: ROUTES_META.ROOT_ADMINISTRATION_PROJECT.path,
-          children: [
-            {
-              path: ROUTES_META.ROOT_ADMINISTRATION_PROJECT_PROJECT_ID.path,
-              handle: getMetaByKey(ROUTES_META.ROOT_ADMINISTRATION_PROJECT_PROJECT_ID),
-              element: <ProjectDetailPage />,
-            },
-            {
-              index: true,
-              element: <ProjectPage />,
-              handle: getMetaByKey(ROUTES_META.ROOT_ADMINISTRATION_PROJECT),
-            },
-          ],
-        },
-        {
-          path: ROUTES_META.ROOT_ADMINISTRATION_TAGS.path,
-          handle: getMetaByKey(ROUTES_META.ROOT_ADMINISTRATION_TAGS),
-          element: <TagsPage />,
-        },
-        {
-          path: ROUTES_META.ROOT_ADMINISTRATION_USER_ACTIVATOR.path,
-          handle: getMetaByKey(ROUTES_META.ROOT_ADMINISTRATION_USER_ACTIVATOR),
-          element: <UserActivatorPage />,
-        },
-      ],
+      path: ROUTES_META.ROOT_USERS.path,
+      handle: getMetaByKey(ROUTES_META.ROOT_USERS),
+      element: <UserPage />,
     },
-
     {
-      path: ROUTES_META.ROOT_COMPONENTS.path,
-      element: <ComponentsPage />,
-      handle: getMetaByKey(ROUTES_META.ROOT_COMPONENTS),
+      path: ROUTES_META.ROOT_USER_DETAIL.path,
+      handle: getMetaByKey(ROUTES_META.ROOT_USER_DETAIL),
+      element: <UserDetailPage />,
+    },
+    {
+      path: ROUTES_META.ROOT_PROJECT.path,
+      handle: getMetaByKey(ROUTES_META.ROOT_PROJECT),
+      element: <ProjectPage />,
+    },
+    {
+      path: ROUTES_META.ROOT_PROJECT_DETAIL.path,
+      handle: getMetaByKey(ROUTES_META.ROOT_PROJECT_DETAIL),
+      element: <ProjectDetailPage />,
+    },
+    {
+      path: ROUTES_META.ROOT_TAGS.path,
+      handle: getMetaByKey(ROUTES_META.ROOT_TAGS),
+      element: <TagsPage />,
+    },
+    {
+      path: ROUTES_META.ROOT_USER_ACTIVATOR.path,
+      handle: getMetaByKey(ROUTES_META.ROOT_USER_ACTIVATOR),
+      element: <UserActivatorPage />,
     },
   ],
 };

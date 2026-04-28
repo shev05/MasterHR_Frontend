@@ -1,5 +1,5 @@
-import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Calendar, Pencil, Users } from 'lucide-react';
+import { useParams } from 'react-router-dom';
+import { Calendar, FileText, Building2, Pencil, Users } from 'lucide-react';
 
 import { useProject } from '@/api/endpoints/project';
 import { AppPageHeader } from '@/shared/components/app-page-header';
@@ -16,21 +16,21 @@ import {
   CardTitle,
   SuspenseWrapper,
 } from '@/shared/components/ui';
-import { ROUTES_META } from '@/shared/constants/routes/router-meta';
 import { sFormat } from '@/shared/lib';
 import { roleUser } from '@/shared/constants/role-user';
 import { useDialog } from '@/providers';
 import { API_BASE_URL } from '@/api/http-client';
+import { BackButton } from '@/shared/components/back-button';
 
 import { ProjectTagsMutateDialog } from './ui/project-tags-mutate';
 import { ProjectInfoMutateDialog } from './ui/project-info-mutate';
 import { ProjectUsersMutateDialog } from './ui/project-user-mutate';
+import { getLevelColor } from './project-detail.lib';
 
 import type { GetProject } from '@/api/endpoints/project';
 
 export function ProjectDetailPage() {
   const { projectId } = useParams<{ projectId: GetProject['id'] }>();
-  const navigate = useNavigate();
 
   const { data: project, isPending: projectIsPending } = useProject({ projectId: projectId || '' });
 
@@ -66,10 +66,7 @@ export function ProjectDetailPage() {
   return (
     <>
       <AppPageHeader className='mb-2'>
-        <Button variant='ghost' size='sm' onClick={() => navigate(ROUTES_META.ROOT_ADMINISTRATION_PROJECT.absPath)}>
-          <ArrowLeft className='mr-2 h-4 w-4' />
-          Назад к проектам
-        </Button>
+        <BackButton />
       </AppPageHeader>
       <SuspenseWrapper condition={!projectIsPending}>
         <div className='space-y-6'>
@@ -89,15 +86,26 @@ export function ProjectDetailPage() {
                 )}
               </div>
             </CardHeader>
-            <CardContent className='pt-0'>
+            <CardContent className='pt-4'>
               <div className='flex items-center justify-between'>
                 <div className='flex-1'>
                   {project?.tags && project.tags.length > 0 ? (
                     <div className='flex flex-wrap gap-2'>
                       {project.tags.map((tag) => (
-                        <Badge key={tag.id} variant='secondary' className='px-2 py-1 text-xs'>
-                          {tag.title}
-                        </Badge>
+                        <div
+                          key={tag.id}
+                          className={`flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium ${getLevelColor(tag.year)}`}
+                        >
+                          <span>{tag.title}</span>
+                          <span className='opacity-75'>
+                            {tag.year} {tag.year === 1 ? 'год' : tag.year < 5 ? 'года' : 'лет'}
+                          </span>
+                          {tag.weight > 0 && (
+                            <span className='rounded-full bg-white/50 px-1.5 py-0.5 text-[10px] font-semibold'>
+                              {Math.round(tag.weight * 100)}%
+                            </span>
+                          )}
+                        </div>
                       ))}
                     </div>
                   ) : (
@@ -167,7 +175,30 @@ export function ProjectDetailPage() {
             <CardHeader className='pb-0'>
               <CardTitle className='text-lg font-semibold'>Дополнительная информация</CardTitle>
             </CardHeader>
-            <CardContent className='space-y-4 py-0'>
+            <CardContent className='space-y-4'>
+              {project?.customer && (
+                <div className='flex items-center gap-2 text-sm'>
+                  <Building2 className='text-muted-foreground h-4 w-4 flex-shrink-0' />
+                  <span className='text-muted-foreground'>Заказчик:</span>
+                  <span className='font-medium'>{project.customer}</span>
+                </div>
+              )}
+
+              {project?.technicalTask && (
+                <div className='flex items-center gap-2 text-sm'>
+                  <FileText className='text-muted-foreground h-4 w-4 flex-shrink-0' />
+                  <span className='text-muted-foreground'>Техническое задание:</span>
+                  <a
+                    href={`${API_BASE_URL}${project.technicalTask}`}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='text-primary font-medium hover:underline'
+                  >
+                    Посмотреть файл
+                  </a>
+                </div>
+              )}
+
               <div className='flex items-center gap-2 text-sm'>
                 <Calendar className='text-muted-foreground h-4 w-4 flex-shrink-0' />
                 <span className='text-muted-foreground'>Создан:</span>

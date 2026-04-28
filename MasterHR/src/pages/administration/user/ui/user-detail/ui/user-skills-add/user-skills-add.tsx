@@ -1,6 +1,6 @@
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { optionSkillsLevel, useSkillsAdd } from '@/api/endpoints/skills';
+import { useSkillsAdd } from '@/api/endpoints/skills';
 import { yupCustomResolver } from '@/shared/lib/yup-custom-resolver';
 import { useCloseDialogAlert } from '@/shared/hooks/use-close-dialog-alert';
 import { toast } from '@/shared/components/app-toaster';
@@ -14,7 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/shared/components/ui';
-import { FormSelect } from '@/shared/components/controls';
 import { parseApiErrors } from '@/api/http-client';
 import { FormVoiceInput } from '@/shared/components/controls/voice-input';
 
@@ -24,9 +23,11 @@ import type { BaseDialogProps } from '@/shared/interface';
 import type { FC } from 'react';
 import type { CreateUserSkillsFormValue } from './user-skills-add.lib';
 
-type UserSkillsCreateDialogProps = BaseDialogProps;
+type UserSkillsCreateDialogProps = BaseDialogProps & {
+  userId: string;
+};
 
-export const UserSkillsCreateDialog: FC<UserSkillsCreateDialogProps> = ({ closeDialog }) => {
+export const UserSkillsCreateDialog: FC<UserSkillsCreateDialogProps> = ({ closeDialog, userId }) => {
   const { mutate: skillsAdd, isPending: skillsAddIsPending } = useSkillsAdd();
 
   const form = useForm<CreateUserSkillsFormValue>({
@@ -41,9 +42,14 @@ export const UserSkillsCreateDialog: FC<UserSkillsCreateDialogProps> = ({ closeD
   const handleFormSubmit = handleSubmit((formValues) => {
     skillsAdd(
       {
-        ...formValues,
-        years: formValues.years || 0,
+        data: {
+          ...formValues,
+          years: formValues.years || 0,
+          level: 'Базовый',
+        },
+        userId: userId,
       },
+
       {
         onSuccess: () => {
           toast.success('Навыки успешно создан');
@@ -84,13 +90,6 @@ export const UserSkillsCreateDialog: FC<UserSkillsCreateDialogProps> = ({ closeD
                 required
               />
               <FormVoiceInput name={SKILLS_FIELDS.YEARS} label='Лет опыта' placeholder='Введите сколько лет' required />
-              <FormSelect
-                name={SKILLS_FIELDS.LEVEL}
-                options={optionSkillsLevel}
-                label='Уровень'
-                placeholder='Выберите уровень'
-                required
-              />
             </DialogBody>
 
             <DialogFooter className='relative'>

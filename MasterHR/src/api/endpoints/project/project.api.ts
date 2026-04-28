@@ -2,6 +2,7 @@ import { httpClient } from '@/api/http-client';
 import { API_ROUTES } from '@/api/api-routes';
 
 import type {
+  AddUserProject,
   GetProject,
   GetProjectPaginatedResponse,
   GetProjectResponse,
@@ -9,10 +10,9 @@ import type {
   PatchInfoProject,
   PatchTagsProject,
   PathcUsersProject,
-  PostProject,
   ProjectQueries,
+  ProjectTag,
 } from './project.interface';
-import type { GetTags } from '@/api/endpoints/tags';
 
 type ApiEntityId = GetProject['id'];
 
@@ -34,8 +34,20 @@ export const projectApi = {
     return response.data;
   },
 
-  create: async (data: PostProject) => {
-    const response = await httpClient.post<GetProjectResponse>(API_ROUTES.ROOT_PROJECT.absPath, data);
+  create: async (data: FormData) => {
+    const response = await httpClient.post<GetProjectResponse>(API_ROUTES.ROOT_PROJECT.absPath, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return response.data;
+  },
+
+  addUser: async ({ projectId, user }: { projectId: GetProject['id']; user: AddUserProject }) => {
+    const response = await httpClient.post<void>(API_ROUTES.ROOT_PROJECT_PROJECT_ID_USER.generatePath({ projectId }), {
+      user,
+    });
 
     return response.data;
   },
@@ -52,7 +64,7 @@ export const projectApi = {
   },
 
   getTags: async (projectId: GetProject['id'], signal: AbortSignal) => {
-    const response = await httpClient.get<GetTags[]>(
+    const response = await httpClient.get<ProjectTag>(
       API_ROUTES.ROOT_PROJECT_PROJECT_ID_TAGS.generatePath({ projectId }),
       {
         signal,

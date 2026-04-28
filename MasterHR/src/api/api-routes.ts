@@ -18,14 +18,14 @@ export const API_ROUTES = asTransformedRoutes({
       USER: {
         path: 'User',
         children: {
+          MATCH: {
+            path: 'match',
+          },
           USERID: {
             path: ':userId',
             children: {
               PROFILE: {
                 path: 'profile',
-              },
-              SKILLS: {
-                path: 'skills',
               },
             },
           },
@@ -37,11 +37,19 @@ export const API_ROUTES = asTransformedRoutes({
               },
             },
           },
+          AVATAR: {
+            path: 'avatar',
+          },
+        },
+      },
+      SKILLS: {
+        path: 'skills',
+        children: {
           EXTRACT_SKILLS: {
             path: 'extract-skills',
           },
-          AVATAR: {
-            path: 'avatar',
+          USERID: {
+            path: ':userId',
           },
         },
       },
@@ -59,6 +67,9 @@ export const API_ROUTES = asTransformedRoutes({
           PROJECT_ID: {
             path: ':projectId',
             children: {
+              USER: {
+                path: 'user',
+              },
               USERS: {
                 path: 'users',
               },

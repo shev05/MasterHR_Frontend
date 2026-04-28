@@ -1,4 +1,4 @@
-import { Check, Component, Folder, House, ShieldUser, Tag, User, Users2 } from 'lucide-react';
+import { Check, Folder, House, Tag, Users2 } from 'lucide-react';
 
 import { asTransformedRoutes } from '@/shared/builders';
 
@@ -18,46 +18,34 @@ export const ROUTES_META = asTransformedRoutes({
         label: 'Страница не найдена',
       },
       HOME: { path: '/home', label: 'Главная. страница', icon: House },
-      ADMINISTRATION: {
-        path: '/administration',
-        label: 'Администрирование',
-        icon: ShieldUser,
-        children: {
-          USERS: {
-            path: 'users',
-            label: 'Сотрудники',
-            icon: Users2,
-            dataId: 'users',
-            children: {
-              USER_ID: {
-                path: ':userId',
-                label: 'Сотрудник',
-                icon: User,
-              },
-            },
-          },
-          PROJECT: {
-            path: 'project',
-            label: 'Проекты',
-            icon: Folder,
-            children: {
-              PROJECT_ID: {
-                path: ':projectId',
-                label: 'Проект',
-                icon: Folder,
-              },
-            },
-          },
-          TAGS: { path: 'tags', label: 'Теги', icon: Tag },
-          USER_ACTIVATOR: {
-            path: 'user-activator',
-            label: 'Активация сотрудников',
-            icon: Check,
-            dataId: 'users-activator',
-          },
-        },
+      USERS: {
+        path: '/users',
+        label: 'Сотрудники',
+        icon: Users2,
+        dataId: 'users',
       },
-      COMPONENTS: { path: '/components', label: 'Компоненты', icon: Component },
+      USER_DETAIL: {
+        path: '/users/:userId',
+        label: 'Сотрудник',
+        icon: Users2,
+      },
+      PROJECT: {
+        path: '/project',
+        label: 'Проекты',
+        icon: Folder,
+      },
+      PROJECT_DETAIL: {
+        path: '/project/:projectId',
+        label: 'Проект',
+        icon: Folder,
+      },
+      TAGS: { path: '/tags', label: 'Теги', icon: Tag },
+      USER_ACTIVATOR: {
+        path: '/user-activator',
+        label: 'Активация сотрудников',
+        icon: Check,
+        dataId: 'users-activator',
+      },
     },
   },
 } as const);

@@ -24,14 +24,11 @@ export function UserPage() {
 
   const handleViewUserPage = (user?: GetUser) => {
     if (!user?.id) return;
-    navigate(ROUTES_META.ROOT_ADMINISTRATION_USERS_USER_ID.generatePath({ userId: user.id }));
+    navigate(ROUTES_META.ROOT_USER_DETAIL.generatePath({ userId: user.id }));
   };
   return (
     <>
-      <AppPageHeader
-        icon={ROUTES_META.ROOT_ADMINISTRATION_USERS.icon}
-        title={ROUTES_META.ROOT_ADMINISTRATION_USERS.label}
-      >
+      <AppPageHeader icon={ROUTES_META.ROOT_USERS.icon} title={ROUTES_META.ROOT_USERS.label}>
         {/* <AddButton onClick={() => handleTagsMutate()}>Создать тег</AddButton> */}
       </AppPageHeader>
       <ErrorBoundary fallback={<ErrorBoundaryFallback text={PLACEHOLDERS.tableError} />}>
