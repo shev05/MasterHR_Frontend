@@ -5,8 +5,9 @@ import type { BaseSkills, GetSkills, GetSkillsResponse } from './skills.interfac
 import type { GetExtractSkills, GetUser } from '@/api/endpoints/user';
 
 export const skillsApi = {
-  getList: async (userId: GetUser['id'], signal: AbortSignal) => {
+  getList: async (userId: GetUser['id'], signal: AbortSignal, searchBy?: string) => {
     const response = await httpClient.get<GetSkillsResponse>(API_ROUTES.ROOT_SKILLS_USERID.generatePath({ userId }), {
+      params: { searchBy },
       signal,
     });
 
@@ -30,12 +31,16 @@ export const skillsApi = {
     return response.data;
   },
 
-  resumeFile: async (formData: FormData) => {
-    const response = await httpClient.post<GetExtractSkills>(API_ROUTES.ROOT_SKILLS_EXTRACT_SKILLS.absPath, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+  resumeFile: async ({ formData, userId }: { formData: FormData; userId: GetUser['id'] }) => {
+    const response = await httpClient.post<GetExtractSkills>(
+      API_ROUTES.ROOT_SKILLS_USERID_EXTRACT_SKILLS.generatePath({ userId }),
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
     return response.data;
   },
 };

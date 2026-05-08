@@ -27,7 +27,7 @@ export const RegisterForm: FC = () => {
   const handleFormSubmit = handleSubmit((formValues) => {
     register(formValues, {
       onSuccess: () => {
-        toast.success('Вы зарегистрировались, вернитесь к авторизации');
+        toast.success('Вы зарегистрировались, дождитесь подтверждения и вернитесь к авторизации');
         reset();
       },
       onError: (error) => parseApiErrors({ error, setError }),

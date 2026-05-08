@@ -9,7 +9,7 @@ const columnHelper = createColumnHelper<GetUserActivator>();
 
 type GetColumnsProps = BaseGetColumnsProps<GetUserActivator>;
 
-export const getColumns = ({ onAccept }: GetColumnsProps) => [
+export const getColumns = ({ onAccept, onDelete }: GetColumnsProps) => [
   columnHelper.accessor('userName', {
     id: 'name',
     cell: ({ row }) => {
@@ -27,6 +27,6 @@ export const getColumns = ({ onAccept }: GetColumnsProps) => [
   }),
   columnHelper.display({
     ...BASE_ACTION_CELL_CONFIG,
-    cell: ({ row }) => <TableActions row={row.original} onAccept={onAccept} />,
+    cell: ({ row }) => <TableActions row={row.original} onAccept={onAccept} onDelete={onDelete} />,
   }),
 ];

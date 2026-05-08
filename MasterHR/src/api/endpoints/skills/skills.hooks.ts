@@ -18,11 +18,12 @@ type QueryHookProps = {
 
 export const useSkillsList = (
   { userId }: QueryHookProps,
-  queryOptions?: QueryOptions<GetSkillsResponse, ReturnType<typeof skillsKeys.detail>>
+  queryOptions?: QueryOptions<GetSkillsResponse, ReturnType<typeof skillsKeys.detailList>>,
+  searchBy?: string
 ) => {
   return useQuery({
-    queryKey: skillsKeys.detail(userId),
-    queryFn: ({ signal }) => skillsApi.getList(userId, signal),
+    queryKey: skillsKeys.detailList(userId, searchBy),
+    queryFn: ({ signal }) => skillsApi.getList(userId, signal, searchBy),
     placeholderData: keepPreviousData,
     ...queryOptions,
   });

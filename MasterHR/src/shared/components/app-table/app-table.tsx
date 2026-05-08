@@ -84,7 +84,6 @@ export const AppTable = <T,>({
 
     getCoreRowModel: getCoreRowModel(),
 
-    //for server side sorting and pagination
     manualPagination: true,
     manualSorting: true,
     enableRowSelection: true,

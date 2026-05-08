@@ -50,6 +50,11 @@ export const API_ROUTES = asTransformedRoutes({
           },
           USERID: {
             path: ':userId',
+            children: {
+              EXTRACT_SKILLS: {
+                path: 'extract-skills',
+              },
+            },
           },
         },
       },
@@ -87,6 +92,14 @@ export const API_ROUTES = asTransformedRoutes({
               },
             },
           },
+          USER_ID: {
+            path: ':userId',
+            children: {
+              ALL: {
+                path: 'all',
+              },
+            },
+          },
         },
       },
       USER_ACTIVATOR: {
@@ -97,6 +110,9 @@ export const API_ROUTES = asTransformedRoutes({
             children: {
               ACTIVATE_USER: {
                 path: 'activate-user',
+              },
+              CANCEL_USER: {
+                path: 'cancel-user',
               },
             },
           },

@@ -12,7 +12,7 @@ const columnHelper = createColumnHelper<GetUser>();
 
 type GetColumnsProps = BaseGetColumnsProps<GetUser>;
 
-export const getColumns = ({ onView }: GetColumnsProps) => [
+export const getColumns = ({ onView, onDelete }: GetColumnsProps) => [
   columnHelper.accessor('avatar', {
     id: 'avatar',
     cell: ({ row }) => {
@@ -68,6 +68,6 @@ export const getColumns = ({ onView }: GetColumnsProps) => [
   }),
   columnHelper.display({
     ...BASE_ACTION_CELL_CONFIG,
-    cell: ({ row }) => <TableActions row={row.original} onView={onView} />,
+    cell: ({ row }) => <TableActions row={row.original} onView={onView} onDelete={onDelete} />,
   }),
 ];

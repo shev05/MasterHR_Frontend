@@ -1,5 +1,6 @@
 import {
   useActivateUser,
+  useCancelUser,
   USER_ACTIVATOR_SCHEMA_QUERIES,
   useUserActivatorList,
   type GetUserActivator,
@@ -26,6 +27,7 @@ export function UserActivatorPage() {
   });
 
   const { mutate: activate, isPending: activateIsPending } = useActivateUser();
+  const { mutate: unactivate, isPending: unactivateIsPending } = useCancelUser();
 
   const handleActivate = (user?: GetUserActivator) => {
     if (!user?.userId) return;
@@ -37,15 +39,26 @@ export function UserActivatorPage() {
     });
   };
 
+  const handleCancel = (user?: GetUserActivator) => {
+    if (!user?.userId) return;
+    unactivate(user.userId, {
+      onSuccess: () => {
+        toast.success(MESSAGE_API.unactivate_success);
+      },
+      onError: (error: Error) => parseApiErrors({ error }),
+    });
+  };
+
   return (
     <>
       <ErrorBoundary fallback={<ErrorBoundaryFallback text={PLACEHOLDERS.tableError} />}>
         <AppTable
           data={userActivatorList?.list}
           meta={userActivatorList?.meta}
-          isDataFetching={userActivatorListIsPending || activateIsPending}
+          isDataFetching={userActivatorListIsPending || activateIsPending || unactivateIsPending}
           columns={getColumns({
             onAccept: handleActivate,
+            onDelete: handleCancel,
           })}
           onPaginationParamsChange={(params) => updateParams(params, { withPaginationReset: false })}
           onSortingParamsChange={(params) => updateParams(params, { withPaginationReset: false })}

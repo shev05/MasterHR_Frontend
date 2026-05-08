@@ -13,6 +13,7 @@ import type {
   ProjectQueries,
   ProjectTag,
 } from './project.interface';
+import type { GetUser } from '@/api/endpoints/user';
 
 type ApiEntityId = GetProject['id'];
 
@@ -70,6 +71,15 @@ export const projectApi = {
         signal,
       }
     );
+
+    return response.data;
+  },
+
+  getUserProject: async (userId: GetUser['id'], signal: AbortSignal, filter?: boolean) => {
+    const response = await httpClient.get<GetProject[]>(API_ROUTES.ROOT_PROJECT_USER_ID_ALL.generatePath({ userId }), {
+      params: { includeCreatedProjects: filter },
+      signal,
+    });
 
     return response.data;
   },

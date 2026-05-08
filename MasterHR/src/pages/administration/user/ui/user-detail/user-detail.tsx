@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Briefcase, Mail, Pencil, Phone, Trash2 } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 
@@ -21,6 +21,9 @@ import { toast } from '@/shared/components/app-toaster';
 import { CenteredSpinner } from '@/shared/components/centered-spinner';
 import { cn } from '@/shared/lib';
 import { BackButton } from '@/shared/components/back-button';
+import { useProjectUser } from '@/api/endpoints/project';
+import { ProjectCard } from '@/shared/components/project-card';
+import { SearchInput } from '@/shared/components/controls/search-input';
 
 import { UserInfoMutateDialog } from './ui/user-info-mutate';
 import { UserSkillsCreateDialog } from './ui/user-skills-add';
@@ -38,15 +41,23 @@ const EXPERIENCE_COLORS = {
 export function UserDetailPage() {
   const { userId } = useParams<{ userId: GetUser['id'] }>();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [search, setSearch] = useState<string>('');
 
   const { data: currentUser } = UseMe();
   const { data: user, isPending: userIsPending } = useUser({ userId: userId || '' });
   const { mutate: avatarUpdate } = useUserAvatarUpdate();
   const { mutate: deleteSkill, isPending: deleteSkillIsPending } = useSkillsDelete();
 
+  const { data: userProject, isPending: userProjectIsPending } = useProjectUser(
+    { userId: userId || '' },
+    { enabled: !!userId },
+    false
+  );
+
   const { data: skillsData, isPending: skillsIsPending } = useSkillsList(
     { userId: userId || '' },
-    { enabled: !!userId }
+    { enabled: !!userId },
+    search
   );
   const isMe = currentUser?.id === user?.id;
 
@@ -110,18 +121,21 @@ export function UserDetailPage() {
 
   const handleFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file) return;
+    if (!file || !userId) return;
 
     try {
       const formData = new FormData();
       formData.append('resumeFile', file);
 
-      skillFileAdd(formData, {
-        onSuccess: () => {
-          toast.success('Круто');
-        },
-        onError: (error: Error) => parseApiErrors({ error }),
-      });
+      skillFileAdd(
+        { formData, userId },
+        {
+          onSuccess: () => {
+            toast.success('Навыки добавлены');
+          },
+          onError: (error: Error) => parseApiErrors({ error }),
+        }
+      );
     } catch (error) {
       console.error('Error extracting skills:', error);
     }
@@ -151,13 +165,16 @@ export function UserDetailPage() {
     return EXPERIENCE_COLORS.senior;
   };
 
+  const projectIsPending = userProjectIsPending;
+
   return (
-    <>
+    <div className='flex h-screen flex-col overflow-hidden'>
       <AppPageHeader className='mb-0'>
         <BackButton />
       </AppPageHeader>
+
       <SuspenseWrapper condition={userIsPending || deleteSkillIsPending} fallback={<CenteredSpinner />}>
-        <Card>
+        <Card className='flex min-h-0 flex-1 flex-col overflow-hidden'>
           <CardContent className='pt-6'>
             <div className='flex flex-col items-center gap-6 sm:flex-row sm:items-start'>
               <Avatar
@@ -214,7 +231,10 @@ export function UserDetailPage() {
           </CardContent>
           <CardContent className='flex flex-col gap-3 border-t pt-6'>
             <div className='flex justify-between'>
-              <h2 className='mb-4 text-lg font-semibold'>Навыки</h2>
+              <div className='flex items-start gap-4'>
+                <h2 className='mb-4 text-lg font-semibold'>Навыки</h2>
+                <SearchInput value={search} onDebouncedChange={setSearch} />
+              </div>
               {user?.canEdit && (
                 <div className='flex gap-2'>
                   <>
@@ -234,7 +254,7 @@ export function UserDetailPage() {
               )}
             </div>
             <SuspenseWrapper condition={!skillsIsPending}>
-              <div className='max-h-70 flex flex-wrap gap-3 overflow-y-auto pr-2'>
+              <div className='max-h-50 flex flex-wrap gap-3 overflow-y-auto pr-2'>
                 {skillsData?.skills && skillsData.skills.length > 0 ? (
                   skillsData.skills.map((skill) => {
                     return (
@@ -244,7 +264,7 @@ export function UserDetailPage() {
                       >
                         <span className='truncate font-medium' title={skill.name}>
                           {skill.name}
-                        </span>{' '}
+                        </span>
                         <span>
                           {skill.years != null
                             ? `${skill.years} ${skill.years === 1 ? 'год' : skill.years < 5 ? 'года' : 'лет'}`
@@ -269,14 +289,33 @@ export function UserDetailPage() {
               </div>
             </SuspenseWrapper>
           </CardContent>
-          <CardContent className='border-t pt-6'>
-            <div className='flex justify-between'>
-              <h2 className='mb-4 text-lg font-semibold'>Проекты</h2>
+          <CardContent className='flex min-h-0 flex-1 flex-col overflow-hidden border-t pt-6'>
+            <div className='mb-4 flex justify-between'>
+              <h2 className='text-lg font-semibold'>Проекты</h2>
               <Button onClick={handleUserMatchProject}>Найти нужный проект</Button>
             </div>
+
+            <SuspenseWrapper condition={!projectIsPending}>
+              <div className='grid min-h-0 flex-1 grid-cols-1 gap-6'>
+                <div className='flex min-h-0 flex-col'>
+                  <h3 className='text-md mb-3 font-medium'>Участвует в проектах ({userProject?.length || 0})</h3>
+                  <div className='min-h-0 flex-1 overflow-y-auto pr-2'>
+                    {userProject && userProject.length > 0 ? (
+                      <div className='grid gap-4'>
+                        {userProject.map((project) => (
+                          <ProjectCard key={project.id} project={project} currentUserId={userId} />
+                        ))}
+                      </div>
+                    ) : (
+                      <p className='text-muted-foreground text-sm'>Не участвует в других проектах</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </SuspenseWrapper>
           </CardContent>
         </Card>
       </SuspenseWrapper>
-    </>
+    </div>
   );
 }

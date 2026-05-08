@@ -86,7 +86,7 @@ export const UserSkillsCreateDialog: FC<UserSkillsCreateDialogProps> = ({ closeD
               <FormVoiceInput
                 name={SKILLS_FIELDS.NAME}
                 label='Название навыка'
-                placeholder='Введите название скилла'
+                placeholder='Введите название навыка'
                 required
               />
               <FormVoiceInput name={SKILLS_FIELDS.YEARS} label='Лет опыта' placeholder='Введите сколько лет' required />

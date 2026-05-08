@@ -3,6 +3,7 @@ import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import { API_ROUTES } from '@/api/api-routes';
 import { getApiBaseKeys } from '@/shared/lib';
 import { queryClient } from '@/api/query-client';
+import { userKeys } from '@/api/endpoints/user';
 
 import { userActivatorApi } from './user-activator.api';
 
@@ -28,6 +29,16 @@ export const useActivateUser = () => {
     mutationFn: userActivatorApi.activate,
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: userActivatorKeys.base });
+    },
+  });
+};
+
+export const useCancelUser = () => {
+  return useMutation({
+    mutationFn: userActivatorApi.deactivate,
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: userActivatorKeys.base });
+      queryClient.invalidateQueries({ queryKey: userKeys.base });
     },
   });
 };

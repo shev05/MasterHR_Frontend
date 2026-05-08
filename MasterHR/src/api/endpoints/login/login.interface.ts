@@ -11,7 +11,7 @@ export type AuthResponse = {
 export type RegisterPayload = {
   name: string;
   surname: string;
-  patronymc: string;
+  patronymic: string;
   password: string;
   email: string;
   phoneNumber: string;

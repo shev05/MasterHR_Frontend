@@ -23,7 +23,7 @@ import { FormVoiceInput } from '@/shared/components/controls/voice-input';
 
 import { createTagsFormValues, TAGS_BASE_SCHEMA, TAGS_DEFAULT_VALUES, TAGS_FIELDS } from './tags-mutate-dialog.lib';
 
-import type { GetTags, GetTagsResponse } from '@/api/endpoints/tags';
+import type { GetTags } from '@/api/endpoints/tags';
 import type { BaseDialogProps } from '@/shared/interface';
 import type { FC } from 'react';
 import type { TagsFormValue } from './tags-mutate-dialog.lib';
@@ -52,8 +52,8 @@ export const TagsMutateDialog: FC<TagsMutateDialogProps> = ({ tagId, closeDialog
 
   const handleFormSubmit = handleSubmit((formValues) => {
     const mutationConfig = {
-      onSuccess: (response: GetTagsResponse) => {
-        toast.success(response.message);
+      onSuccess: () => {
+        toast.success('Тэг создан');
         closeDialog();
         reset();
       },

@@ -24,4 +24,12 @@ export const userActivatorApi = {
 
     return response.data;
   },
+
+  deactivate: async (userId: GetUserActivator['id']) => {
+    const response = await httpClient.post<null>(
+      API_ROUTES.ROOT_USER_ACTIVATOR_USER_ID_CANCEL_USER.generatePath({ userId })
+    );
+
+    return response.data;
+  },
 };

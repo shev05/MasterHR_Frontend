@@ -45,11 +45,11 @@ export const NotificationProvider = ({ children, websocketUrl }: NotificationPro
     <NotificationContext.Provider value={notificationManager}>
       {children}
 
-      {!isConnected && (
+      {/* {!isConnected && (
         <div className='fixed bottom-4 right-4 z-50 rounded bg-yellow-100 px-3 py-1 text-xs text-yellow-800'>
           Переподключение к серверу...
         </div>
-      )}
+      )} */}
 
       <NotificationDrawer
         isOpen={isDrawerOpen}

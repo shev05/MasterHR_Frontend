@@ -15,6 +15,7 @@ import type {
   ProjectQueries,
   ProjectTag,
 } from './project.interface';
+import type { GetUser } from '@/api/endpoints/user';
 
 const projectKeys = getApiBaseKeys(API_ROUTES.ROOT_PROJECT.absPath);
 const projectUserKeys = getApiBaseKeys(API_ROUTES.ROOT_PROJECT_PROJECT_ID_USERS.absPath);
@@ -34,6 +35,10 @@ export const useProjectList = (
 
 type QueryHookProps = {
   projectId: GetProject['id'];
+};
+
+type QueryHookUserProps = {
+  userId: GetUser['id'];
 };
 
 export const useProject = (
@@ -87,6 +92,18 @@ export const useTagsProject = (
     ...query,
     options,
   };
+};
+
+export const useProjectUser = (
+  { userId }: QueryHookUserProps,
+  queryOptions?: QueryOptions<GetProject[], ReturnType<typeof projectUserKeys.detail>>,
+  filter?: boolean
+) => {
+  return useQuery({
+    queryKey: projectUserKeys.detail(userId + filter),
+    queryFn: ({ signal }) => projectApi.getUserProject(userId, signal, filter),
+    ...queryOptions,
+  });
 };
 
 export const useProjectUsersMutate = () => {

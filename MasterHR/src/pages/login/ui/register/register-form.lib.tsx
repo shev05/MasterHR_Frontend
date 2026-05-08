@@ -5,7 +5,7 @@ import { requiredString, VAL_MESSAGES, VAL_REGEXP } from '@/shared/lib';
 export enum REGISTER_FIELDS {
   NAME = 'name',
   SURNAME = 'surname',
-  PATRONYMC = 'patronymc',
+  PATRONYMC = 'patronymic',
   PASSWORD = 'password',
   EMAIL = 'email',
   PHONENUMBER = 'phoneNumber',

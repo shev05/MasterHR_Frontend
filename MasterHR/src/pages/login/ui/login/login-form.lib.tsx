@@ -13,7 +13,7 @@ export const LOGIN_DEFAULT_VALUES = {
 };
 
 export const LOGIN_FORM_SCHEMA = Yup.object({
-  [LOGIN_FIELDS.LOGIN]: requiredString().max(15, VAL_MESSAGES.FIELD.MAX_SIZE('Логин', 15)),
+  [LOGIN_FIELDS.LOGIN]: requiredString().max(50, VAL_MESSAGES.FIELD.MAX_SIZE('Логин', 50)),
   [LOGIN_FIELDS.PASSWORD]: requiredString(),
 });
 
