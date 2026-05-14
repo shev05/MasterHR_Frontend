@@ -118,6 +118,9 @@ export const API_ROUTES = asTransformedRoutes({
           },
         },
       },
+      WORKLOGS: {
+        path: 'WorkLogs',
+      },
     },
   },
 } as const);

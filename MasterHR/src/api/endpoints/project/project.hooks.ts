@@ -25,12 +25,23 @@ export const useProjectList = (
   { queries = {} }: BaseQueryListHookProps<ProjectQueries> = {},
   queryOptions?: QueryOptions<GetProjectPaginatedResponse, ReturnType<typeof projectKeys.list>>
 ) => {
-  return useQuery({
+  const query = useQuery({
     queryKey: projectKeys.list(queries),
     queryFn: ({ signal }) => projectApi.getList(queries, signal),
     placeholderData: keepPreviousData,
     ...queryOptions,
   });
+
+  const options = transformDataToOptions(query?.data?.list, {
+    asIdKey: 'id',
+    asValueKey: 'id',
+    asLabelKeys: 'title',
+  });
+
+  return {
+    ...query,
+    options,
+  };
 };
 
 type QueryHookProps = {

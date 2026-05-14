@@ -38,6 +38,16 @@ export const parseDateFromInput = (dateString: string): Date | null => {
   return parse(dateString, DATE_FORMATS.short_dotted, new Date());
 };
 
+export const formatMinutes = (minutes: number) => {
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+
+  if (!hours) return `${mins}m`;
+  if (!mins) return `${hours}h`;
+
+  return `${hours}h ${mins}m`;
+};
+
 export const DEFAULT_TIME_SLOTS = [
   '00:00',
   '00:30',
